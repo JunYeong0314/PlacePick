@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.com.android.library)
@@ -9,6 +11,10 @@ android {
     compileSdk = 34
 
     defaultConfig {
+        buildConfigField("String", "NAVER_CLIENT_ID", getApiKey("NAVER_CLIENT_ID"))
+        buildConfigField("String", "NAVER_CLIENT_KEY", getApiKey("NAVER_CLIENT_KEY"))
+        buildConfigField("String", "KAKAO_NATIVE_KEY", getApiKey("KAKAO_NATIVE_KEY"))
+
         minSdk = 24
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -33,6 +39,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
@@ -43,6 +50,10 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+fun getApiKey(propertyKey: String): String {
+    return gradleLocalProperties(rootDir).getProperty(propertyKey)
 }
 
 dependencies {
@@ -60,7 +71,12 @@ dependencies {
     implementation(libs.compose)
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.7.0-alpha05")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.7.0-alpha05")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.6.4")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.6.4")
     implementation("androidx.compose.material3:material3")
+    implementation(libs.compose.navigation)
+
+    // social login
+    implementation(libs.naver)
+    implementation(libs.kakao)
 }

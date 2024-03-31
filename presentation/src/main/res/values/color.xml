@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--base-->
+    <color name="black">#000000</color>
+    
+    <!--login-->
+    <color name="kakao_login">#FFE812</color>
+    <color name="naver_login">#06BD34</color>
+</resources>

@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     kotlin("kapt")
     id("com.android.application")
@@ -15,6 +17,10 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField("String", "KAKAO_NATIVE_KEY", getApiKey("KAKAO_NATIVE_KEY"))
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] =
+            getApiKey("KAKAO_NATIVE_KEY_MF")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -39,6 +45,14 @@ android {
         jvmTarget = "1.8"
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
+}
+
+fun getApiKey(propertyKey: String): String {
+    return gradleLocalProperties(rootDir).getProperty(propertyKey)
 }
 
 dependencies {
@@ -57,6 +71,10 @@ dependencies {
     // hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+
+    // social login
+    implementation(libs.naver)
+    implementation(libs.kakao)
 
 }
 
