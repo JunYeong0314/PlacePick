@@ -2,8 +2,10 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
+    kotlin("kapt")
     alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
+    alias(libs.plugins.com.google.dagger.hilt.android)
 }
 
 android {
@@ -79,4 +81,14 @@ dependencies {
     // social login
     implementation(libs.naver)
     implementation(libs.kakao)
+
+    // hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.compose.hilt.navigation)
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }

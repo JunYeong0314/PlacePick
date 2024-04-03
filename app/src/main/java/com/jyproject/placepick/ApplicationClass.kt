@@ -12,8 +12,5 @@ class ApplicationClass: Application() {
         super.onCreate()
 
         KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_KEY)
-
-        var keyHash = Utility.getKeyHash(this)
-        Log.d("HashKey", keyHash)
     }
 }

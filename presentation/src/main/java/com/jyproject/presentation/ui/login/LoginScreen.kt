@@ -24,12 +24,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.jyproject.placepick.ui.theme.PlacePickTheme
 import com.jyproject.presentation.R
 import com.jyproject.presentation.ui.login.Platform.KAKAO
 import com.jyproject.presentation.ui.login.Platform.NAVER
 
-@Composable fun LoginScreen() {
+@Composable fun LoginScreen(
+    viewModel: LoginViewModel = hiltViewModel()
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -45,9 +48,16 @@ import com.jyproject.presentation.ui.login.Platform.NAVER
 
         Spacer(modifier = Modifier.size(50.dp))
 
-        LoginBox(painterId = R.drawable.ic_login_kakao, platform = KAKAO, onLoginClick = {})
+        LoginBox(
+            painterId = R.drawable.ic_login_kakao,
+            platform = KAKAO,
+            onLoginClick = {}
+        )
         Spacer(modifier = Modifier.size(12.dp))
-        LoginBox(painterId = R.drawable.ic_login_naver, platform = NAVER, onLoginClick = {})
+        LoginBox(
+            painterId = R.drawable.ic_login_naver,
+            platform = NAVER,
+            onLoginClick = { viewModel.startLogin(NAVER) })
     }
 }
 

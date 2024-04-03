@@ -8,10 +8,11 @@ espresso-core = "3.5.1"
 appcompat = "1.6.1"
 material = "1.11.0"
 org-jetbrains-kotlin-jvm = "1.8.10"
-dagger = "2.44"
+dagger = "2.47"
 lifecycle = "2.7.0"
 compose = "1.6.4"
 compose-navigation = "2.7.7"
+compose-hilt-navigation = "1.2.0"
 firebase = "4.4.1"
 firebase-bom = "32.8.0"
 kakao = "2.15.0"
@@ -31,6 +32,8 @@ compose-navigation = { group = "androidx.navigation", name = "navigation-compose
 
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger" }
+compose-hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "compose-hilt-navigation"}
+dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
 
 firebase = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom"}
 
