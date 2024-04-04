@@ -1,5 +1,6 @@
 package com.jyproject.presentation.ui.login
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +32,7 @@ import com.jyproject.presentation.ui.login.Platform.KAKAO
 import com.jyproject.presentation.ui.login.Platform.NAVER
 
 @Composable fun LoginScreen(
+    context: Context,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     Column(
@@ -51,13 +53,13 @@ import com.jyproject.presentation.ui.login.Platform.NAVER
         LoginBox(
             painterId = R.drawable.ic_login_kakao,
             platform = KAKAO,
-            onLoginClick = {}
+            onLoginClick = { viewModel.startKakaoLogin() }
         )
         Spacer(modifier = Modifier.size(12.dp))
         LoginBox(
             painterId = R.drawable.ic_login_naver,
             platform = NAVER,
-            onLoginClick = { viewModel.startLogin(NAVER) })
+            onLoginClick = { viewModel.startNaverLogin(context = context) })
     }
 }
 
@@ -108,12 +110,5 @@ import com.jyproject.presentation.ui.login.Platform.NAVER
             )
 
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable fun PreviewLoginScreen() {
-    PlacePickTheme {
-        LoginScreen()
     }
 }

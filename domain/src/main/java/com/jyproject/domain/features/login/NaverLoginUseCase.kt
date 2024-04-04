@@ -5,8 +5,8 @@ import javax.inject.Inject
 class NaverLoginUseCase @Inject constructor(
     private val naverLoginRepository: NaverLoginRepository
 ){
-    operator fun invoke(updateSocialToken: (String?) -> Unit) {
-        naverLoginRepository.startNaverLogin { updateSocialToken(it) }
+    operator fun invoke(context: Any, updateSocialToken: (String?) -> Unit) {
+        naverLoginRepository.startNaverLogin(context = context) { updateSocialToken(it) }
     }
 
 }

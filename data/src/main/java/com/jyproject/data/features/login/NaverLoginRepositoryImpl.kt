@@ -1,31 +1,31 @@
 package com.jyproject.data.features.login
 
 import android.content.Context
-import android.util.Log
 import com.jyproject.data.BuildConfig
 import com.jyproject.domain.features.login.NaverLoginRepository
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.OAuthLoginCallback
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class NaverLoginRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context
-): NaverLoginRepository {
+class NaverLoginRepositoryImpl @Inject constructor(): NaverLoginRepository {
     companion object {
         const val NAVER_CLIENT_ID = BuildConfig.NAVER_CLIENT_ID
         const val NAVER_CLIENT_KEY = BuildConfig.NAVER_CLIENT_KEY
     }
-    override fun startNaverLogin(updateSocialToken: (String?) -> Unit) {
+    override fun startNaverLogin(context: Any, updateSocialToken: (String?) -> Unit) {
         naverSetOAuthLoginCallBack { updateSocialToken(it) }
+        var curContext: Context? = null
+        if(context is Context) curContext = context
 
-        NaverIdLoginSDK.initialize(
-            context = context,
-            NAVER_CLIENT_ID,
-            NAVER_CLIENT_KEY,
-            "PlacePick"
-        )
-        NaverIdLoginSDK.authenticate(context, oAuthLoginCallBack)
+        curContext?.let { cxt ->
+            NaverIdLoginSDK.initialize(
+                context = cxt,
+                NAVER_CLIENT_ID,
+                NAVER_CLIENT_KEY,
+                "PlacePick"
+            )
+            NaverIdLoginSDK.authenticate(cxt, oAuthLoginCallBack)
+        }
     }
 
     private lateinit var oAuthLoginCallBack: OAuthLoginCallback
