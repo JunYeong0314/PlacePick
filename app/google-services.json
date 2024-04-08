@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "481013595798",
+    "project_id": "placepick-ec8ff",
+    "storage_bucket": "placepick-ec8ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481013595798:android:9761dc4b3462b9f7860cb7",
+        "android_client_info": {
+          "package_name": "com.jyproject.placepick"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4ZPt3Q-LY9pYlG1nAJLEM4hamavgC7h0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

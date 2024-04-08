@@ -33,7 +33,8 @@ import com.jyproject.presentation.ui.login.Platform.NAVER
 
 @Composable fun LoginScreen(
     context: Context,
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: LoginViewModel = hiltViewModel(),
+    isLogin: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -59,7 +60,11 @@ import com.jyproject.presentation.ui.login.Platform.NAVER
         LoginBox(
             painterId = R.drawable.ic_login_naver,
             platform = NAVER,
-            onLoginClick = { viewModel.startNaverLogin(context = context) })
+            onLoginClick = {
+                viewModel.startNaverLogin(context = context)
+                isLogin()
+            }
+        )
     }
 }
 

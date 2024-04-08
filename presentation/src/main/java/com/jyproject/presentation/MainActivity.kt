@@ -15,7 +15,7 @@ class MainActivity: ComponentActivity() {
 
         setContent {
             PlacePickTheme {
-                LoginScreen(this@MainActivity)
+                PlacePickApp(context = this@MainActivity)
             }
         }
     }

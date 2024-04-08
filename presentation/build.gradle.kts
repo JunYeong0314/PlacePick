@@ -77,6 +77,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.4")
     implementation("androidx.compose.material3:material3")
     implementation(libs.compose.navigation)
+    implementation(libs.compose.material)
 
     // social login
     implementation(libs.naver)

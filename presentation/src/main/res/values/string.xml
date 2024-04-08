@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Screen Route-->
+    <string name="route_login">Login</string>
+    <string name="route_home">Home</string>
+    <string name="route_main">Main</string>
+</resources>
