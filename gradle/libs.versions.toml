@@ -13,11 +13,13 @@ lifecycle = "2.7.0"
 compose = "1.6.4"
 compose-navigation = "2.7.7"
 compose-hilt-navigation = "1.2.0"
+compose-material = "1.6.5"
+compose-lifecycle = "2.6.2"
 firebase = "4.4.1"
 firebase-bom = "32.8.0"
 kakao = "2.15.0"
 naver = "5.6.0"
-compose-material = "1.6.5"
+flow = "1.6.4"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -27,10 +29,12 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+flow = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "flow" }
 
 compose = { group = "androidx.activity", name = "activity-compose", version.ref = "compose"}
 compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "compose-navigation"}
 compose-material = { group = "androidx.compose.material", name = "material", version.ref = "compose-material" }
+compose-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "compose-lifecycle" }
 
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger" }

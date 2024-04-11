@@ -23,4 +23,7 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.dagger)
 
+    // flow
+    implementation(libs.flow)
+
 }

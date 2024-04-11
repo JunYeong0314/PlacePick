@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Screen Route-->
+    <!-- Screen Route -->
     <string name="route_login">Login</string>
     <string name="route_home">Home</string>
     <string name="route_main">Main</string>
+    <string name="route_mypage">MyPage</string>
+
+    <!-- App Message -->
+    <string name="message_login_error">[Error] 로그인을 할 수 없습니다.</string>
 </resources>

@@ -2,6 +2,7 @@
 <resources>
     <!--base-->
     <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
     
     <!--login-->
     <color name="kakao_login">#FFE812</color>

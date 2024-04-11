@@ -78,6 +78,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation(libs.compose.navigation)
     implementation(libs.compose.material)
+    implementation(libs.compose.lifecycle)
 
     // social login
     implementation(libs.naver)

@@ -2,6 +2,8 @@ package com.jyproject.placepick
 
 import android.app.Application
 import android.util.Log
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
 import dagger.hilt.android.HiltAndroidApp

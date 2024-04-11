@@ -5,6 +5,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     alias(libs.plugins.com.google.dagger.hilt.android)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -75,6 +76,11 @@ dependencies {
     // social login
     implementation(libs.naver)
     implementation(libs.kakao)
+
+    // fire base
+    implementation(platform(libs.firebase))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore")
 
 }
 
