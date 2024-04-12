@@ -1,6 +1,7 @@
 package com.jyproject.presentation
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -10,10 +11,12 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -60,18 +63,26 @@ fun BottomBar(
 
         items.forEach { screen ->
             BottomNavigationItem(
+                modifier = Modifier.background(Color.White),
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                icon = { Icon(imageVector = screen.icon, contentDescription = null) },
+                icon = {
+                    Icon(
+                        imageVector = screen.icon,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
+               },
                 onClick = {
                     navController.navigate(screen.route){
                         popUpTo(navController.graph.findStartDestination().id){
                             saveState = true
                         }
                     }
-                }
+                },
             )
         }
     }
+
 
 }
 
