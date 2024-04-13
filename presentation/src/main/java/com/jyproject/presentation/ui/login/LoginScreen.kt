@@ -1,6 +1,7 @@
 package com.jyproject.presentation.ui.login
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -49,12 +50,12 @@ import com.jyproject.presentation.ui.login.Platform.NAVER
     val loginState by viewModel.loginFlow.collectAsStateWithLifecycle()
     val snackBarHostState = remember { SnackbarHostState() }
 
-    when(loginState){
-        LoginState.LOADING -> {}
-        LoginState.EXIST -> isLogin()
-        LoginState.INIT -> {}
-        LoginState.ERROR -> {
-            LaunchedEffect(loginState){
+    LaunchedEffect(loginState) {
+        when(loginState){
+            LoginState.LOADING -> {}
+            LoginState.EXIST -> { isLogin() }
+            LoginState.INIT -> {}
+            LoginState.ERROR -> {
                 snackBarHostState.showSnackbar(
                     message = "[Error] 로그인을 할 수 없습니다.",
                     duration = SnackbarDuration.Short

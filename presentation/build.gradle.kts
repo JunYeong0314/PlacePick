@@ -88,6 +88,12 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.compose.hilt.navigation)
+
+    // permission
+    implementation(libs.accompanist.permissions)
+
+    // location
+    implementation(libs.play.services.location)
 }
 
 // Allow references to generated code

@@ -1,5 +1,6 @@
 package com.jyproject.presentation
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
