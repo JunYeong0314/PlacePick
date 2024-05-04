@@ -64,8 +64,9 @@ dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" 
 
 firebase = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom"}
 
-# Social Login
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi-kotlin" }
+
+# Social Login
 naver = { group = "com.navercorp.nid", name = "oauth", version.ref = "naver" }
 kakao = { group = "com.kakao.sdk", name = "v2-all", version.ref = "kakao" }
 
@@ -89,6 +90,7 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomdb" 
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomdb" }
 
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "squareup-retrofit" }
+
 [plugins]
 com-android-library = { id = "com.android.library", version.ref = "agp" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
