@@ -1,9 +1,7 @@
 package com.jyproject.presentation.ui.login
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,15 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jyproject.domain.models.LoginState
+import com.jyproject.domain.models.Platform.KAKAO
+import com.jyproject.domain.models.Platform.NAVER
 import com.jyproject.presentation.R
-import com.jyproject.presentation.ui.login.Platform.KAKAO
-import com.jyproject.presentation.ui.login.Platform.NAVER
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable fun LoginScreen(
@@ -54,7 +51,7 @@ import com.jyproject.presentation.ui.login.Platform.NAVER
         when(loginState){
             LoginState.LOADING -> {}
             LoginState.EXIST -> { isLogin() }
-            LoginState.INIT -> {}
+            LoginState.INIT -> { viewModel.signUp() }
             LoginState.ERROR -> {
                 snackBarHostState.showSnackbar(
                     message = "[Error] 로그인을 할 수 없습니다.",

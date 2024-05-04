@@ -3,6 +3,7 @@
     <!--base-->
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="app_base">#FA8F48</color>
     
     <!--login-->
     <color name="kakao_login">#FFE812</color>

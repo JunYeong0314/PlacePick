@@ -1,16 +1,21 @@
 [versions]
-agp = "8.1.2"
-org-jetbrains-kotlin-android = "1.9.0"
+agp = "8.3.1"
+datastore-preferences = "1.1.1"
+map-sdk = "3.18.0"
+moshi-kotlin = "1.12.0"
+okhttp = "4.11.0"
+org-jetbrains-kotlin-android = "1.9.10"
+coroutines = "1.7.3"
 core-ktx = "1.9.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 appcompat = "1.6.1"
-material = "1.11.0"
+material3 = "1.2.1"
 org-jetbrains-kotlin-jvm = "1.8.10"
-dagger = "2.47"
+dagger = "2.48"
 lifecycle = "2.7.0"
-compose = "1.6.4"
+compose = "1.9.0"
 compose-navigation = "2.7.7"
 compose-hilt-navigation = "1.2.0"
 compose-material = "1.6.5"
@@ -21,17 +26,29 @@ kakao = "2.15.0"
 naver = "5.6.0"
 flow = "1.6.4"
 accompanist = "0.32.0"
-play-services-location = "21.1.0"
+play-services-location = "16.0.0"
+naver-map-compose = "1.5.7"
+retrofit = "2.9.0"
+datastore = "1.0.0"
+roomdb = "2.5.2"
+squareup-retrofit = "2.9.0"
 
 [libraries]
+androidx-datastore-preferences-v111 = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore-preferences" }
+converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "squareup-retrofit" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
+map-sdk = { module = "com.naver.maps:map-sdk", version.ref = "map-sdk" }
+material = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 flow = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "flow" }
+
+# Coroutine
+kotlin-coroutines-play = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
 
 # Compose
 compose = { group = "androidx.activity", name = "activity-compose", version.ref = "compose"}
@@ -48,16 +65,30 @@ dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" 
 firebase = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom"}
 
 # Social Login
+moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi-kotlin" }
 naver = { group = "com.navercorp.nid", name = "oauth", version.ref = "naver" }
 kakao = { group = "com.kakao.sdk", name = "v2-all", version.ref = "kakao" }
 
 # Permission
-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
+accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 
 # Location Service
-play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "play-services-location" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
 
+# fornwid Naver Map
+naver-map = { group = "io.github.fornewid", name = "naver-map-compose", version.ref = "naver-map-compose" }
+naver-map-location = { group = "io.github.fornewid", name = "naver-map-location", version.ref = "play-services-location" }
 
+# Data Store
+datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+
+# Room DB
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomdb" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomdb" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomdb" }
+
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "squareup-retrofit" }
 [plugins]
 com-android-library = { id = "com.android.library", version.ref = "agp" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }

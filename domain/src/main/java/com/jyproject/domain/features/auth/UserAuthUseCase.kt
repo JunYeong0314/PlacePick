@@ -1,7 +1,6 @@
 package com.jyproject.domain.features.auth
 
 import com.jyproject.domain.models.LoginState
-import com.jyproject.domain.models.User
 import javax.inject.Inject
 
 class UserAuthUseCase @Inject constructor(

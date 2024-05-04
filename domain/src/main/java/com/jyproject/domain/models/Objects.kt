@@ -1,4 +1,4 @@
-package com.jyproject.presentation.ui.login
+package com.jyproject.domain.models
 
 object Platform {
     const val KAKAO = "카카오"

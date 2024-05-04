@@ -1,12 +1,18 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.util.Properties
 
 plugins {
-    kotlin("kapt")
+    id("com.google.devtools.ksp")
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     alias(libs.plugins.com.google.dagger.hilt.android)
     id("com.google.gms.google-services")
 }
+
+// local.properties 파일에 추가한 값 사용
+val localProperties = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
+}
+
 
 android {
     namespace = "com.jyproject.placepick"
@@ -19,9 +25,12 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        buildConfigField("String", "KAKAO_NATIVE_KEY", getApiKey("KAKAO_NATIVE_KEY"))
+        buildConfigField("String", "KAKAO_NATIVE_KEY", localProperties.getProperty("KAKAO_NATIVE_KEY"))
+        buildConfigField("String", "NAVER_MAP_CLIENT_ID", localProperties.getProperty("NAVER_MAP_CLIENT_ID"))
         manifestPlaceholders["KAKAO_NATIVE_KEY"] =
-            getApiKey("KAKAO_NATIVE_KEY_MF")
+            localProperties.getProperty("KAKAO_NATIVE_KEY_MF")
+        manifestPlaceholders["NAVER_MAP_CLIENT_ID"] =
+            localProperties.getProperty("NAVER_MAP_CLIENT_ID_MF")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -52,10 +61,6 @@ android {
 
 }
 
-fun getApiKey(propertyKey: String): String {
-    return gradleLocalProperties(rootDir).getProperty(propertyKey)
-}
-
 dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
@@ -71,7 +76,7 @@ dependencies {
 
     // hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     // social login
     implementation(libs.naver)
@@ -82,9 +87,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
 
-}
+    implementation(libs.map.sdk)
 
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
 }

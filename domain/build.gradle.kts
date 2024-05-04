@@ -1,8 +1,8 @@
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
+    id("com.google.devtools.ksp")
     id("java-library")
     id("org.jetbrains.kotlin.jvm")
-    id("kotlin-kapt")
 }
 
 java {
@@ -13,14 +13,9 @@ java {
     }
 }
 
-// Added as suggested in Hilt documentation at https://dagger.dev/hilt/gradle-setup
-kapt {
-    correctErrorTypes = true
-}
-
 dependencies {
     // hilt
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.dagger)
 
     // flow

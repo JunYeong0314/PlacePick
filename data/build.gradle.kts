@@ -1,12 +1,17 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.util.Properties
 
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    kotlin("kapt")
-    alias(libs.plugins.com.android.library)
-    alias(libs.plugins.org.jetbrains.kotlin.android)
+    id("com.google.devtools.ksp")
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
     alias(libs.plugins.com.google.dagger.hilt.android)
     id("com.google.gms.google-services")
+}
+
+// local.properties 파일에 추가한 값 사용
+val localProperties = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
 }
 
 android {
@@ -14,9 +19,9 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        buildConfigField("String", "NAVER_CLIENT_ID", getApiKey("NAVER_CLIENT_ID"))
-        buildConfigField("String", "NAVER_CLIENT_KEY", getApiKey("NAVER_CLIENT_KEY"))
-        buildConfigField("String", "KAKAO_NATIVE_KEY", getApiKey("KAKAO_NATIVE_KEY"))
+        buildConfigField("String", "NAVER_CLIENT_ID", localProperties.getProperty("NAVER_CLIENT_ID"))
+        buildConfigField("String", "NAVER_CLIENT_KEY", localProperties.getProperty("NAVER_CLIENT_KEY"))
+        buildConfigField("String", "KAKAO_NATIVE_KEY", localProperties.getProperty("KAKAO_NATIVE_KEY"))
 
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -42,10 +47,7 @@ android {
     buildFeatures {
         buildConfig = true
     }
-}
 
-fun getApiKey(propertyKey: String): String {
-    return gradleLocalProperties(rootDir).getProperty(propertyKey)
 }
 
 dependencies {
@@ -65,14 +67,28 @@ dependencies {
 
     // hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     // social login
     implementation(libs.naver)
     implementation(libs.kakao)
+
+    // RoomDB
+    implementation(libs.room.runtime)
+    implementation (libs.room.ktx)
+    annotationProcessor (libs.room.compiler)
+    ksp(libs.room.compiler)
+
+    // retrofit
+    implementation (libs.retrofit)
+    implementation (libs.converter.moshi)
+    implementation (libs.moshi.kotlin)
+
+    // Okhttp
+    implementation (libs.okhttp)
+    implementation (libs.logging.interceptor)
+
+    // Data store
+    implementation (libs.androidx.datastore.preferences.v111)
 }
 
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
-}
