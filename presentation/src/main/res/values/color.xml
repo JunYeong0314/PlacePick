@@ -4,6 +4,10 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="app_base">#FA8F48</color>
+    <color name="light_gray_hard1">#FF8F8F8F</color>
+    <color name="light_gray_hard2">#767575</color>
+    <color name="light_gray_middle1">#C9C9C9</color>
+    <color name="light_gray_weak1">#F4F3F3</color>
     
     <!--login-->
     <color name="kakao_login">#FFE812</color>

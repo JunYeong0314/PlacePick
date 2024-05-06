@@ -19,15 +19,11 @@ import com.jyproject.placepick.ui.theme.Typography
 private val DarkColorScheme = darkColorScheme(
     primary = md_theme_dark_primary,
     secondary = md_theme_dark_secondary,
-    surface = md_theme_dark_surface,
-    surfaceContainer = md_theme_dark_surface_container
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = md_theme_light_primary,
     secondary = md_theme_light_secondary,
-    surface = md_theme_light_surface,
-    surfaceContainer = md_theme_light_surface_container
 )
 
 @Composable

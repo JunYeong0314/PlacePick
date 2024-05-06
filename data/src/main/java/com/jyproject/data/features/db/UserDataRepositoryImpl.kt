@@ -1,4 +1,4 @@
-package com.jyproject.data.features.auth
+package com.jyproject.data.features.db
 
 import android.content.Context
 import androidx.datastore.preferences.core.Preferences
@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.jyproject.domain.features.auth.repository.UserDataRepository
+import com.jyproject.domain.features.db.repository.UserDataRepository
 import com.jyproject.domain.models.UserData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch

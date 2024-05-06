@@ -1,6 +1,6 @@
 package com.jyproject.data
 
-import com.jyproject.domain.features.auth.repository.UserDataRepository
+import com.jyproject.domain.features.db.repository.UserDataRepository
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Request

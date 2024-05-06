@@ -1,11 +1,10 @@
 package com.jyproject.data.features.auth
 
-import android.util.Log
 import com.jyproject.data.remote.service.auth.CheckService
 import com.jyproject.data.remote.service.auth.SignUpService
 import com.jyproject.data.request.auth.SignUpRequest
 import com.jyproject.domain.features.auth.repository.AuthRepository
-import com.jyproject.domain.features.auth.repository.UserDataRepository
+import com.jyproject.domain.features.db.repository.UserDataRepository
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(

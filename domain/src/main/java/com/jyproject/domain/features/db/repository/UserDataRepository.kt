@@ -1,4 +1,4 @@
-package com.jyproject.domain.features.auth.repository
+package com.jyproject.domain.features.db.repository
 
 import com.jyproject.domain.models.UserData
 

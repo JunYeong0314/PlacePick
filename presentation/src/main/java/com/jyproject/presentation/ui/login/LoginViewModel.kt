@@ -1,17 +1,14 @@
 package com.jyproject.presentation.ui.login
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jyproject.domain.features.auth.usecase.CheckMemberUseCase
 import com.jyproject.domain.features.auth.usecase.SignUpUseCase
-import com.jyproject.domain.features.auth.repository.UserDataRepository
+import com.jyproject.domain.features.db.repository.UserDataRepository
 import com.jyproject.domain.features.login.usecase.KakaoLoginUseCase
 import com.jyproject.domain.features.login.usecase.NaverLoginUseCase
 import com.jyproject.domain.models.LoginState
-import com.jyproject.domain.models.Platform.KAKAO
-import com.jyproject.domain.models.Platform.NAVER
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
