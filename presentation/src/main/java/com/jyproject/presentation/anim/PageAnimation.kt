@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
+import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -94,4 +95,40 @@ fun NavGraphBuilder.noAnimatedComposable(
         },
     )
 
+}
+
+fun NavGraphBuilder.horizontallyAnimatedComposableArguments(
+    route: String,
+    arguments: List<NamedNavArgument>? = null,
+    content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit,
+){
+    composable(
+        route = route,
+        content = content,
+        arguments = arguments ?: emptyList(),
+        enterTransition = {
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(animDurationMillis)
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = tween(animDurationMillis)
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(animDurationMillis)
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(animDurationMillis)
+            )
+        }
+    )
 }

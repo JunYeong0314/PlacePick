@@ -1,13 +1,19 @@
 package com.jyproject.presentation.ui.home
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -25,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,9 +47,6 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ){
     val placeData = viewModel.placeData.collectAsStateWithLifecycle()
-    var isEmpty: Boolean? by remember { mutableStateOf(null) }
-
-    LaunchedEffect(placeData) { isEmpty = placeData.value.isNullOrEmpty() }
 
     Column(
         modifier = Modifier
@@ -51,7 +55,20 @@ fun HomeScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        isEmpty?.let { if(it) EmptyPlaceText() }
+        if(placeData.value == null) EmptyPlaceText()
+        else{
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(12.dp)
+            ) {
+                itemsIndexed(placeData.value!!) {_, place->
+                    place.place?.let { placeName->
+                        Text(text = placeName)
+                    }
+                }
+
+            }
+        }
     }
     AddButton(onClickAddBtn = { navController.navigate(Destination.ADD_PLACE_ROUTE)} )
 }
@@ -97,10 +114,16 @@ private fun AddButton(onClickAddBtn: () -> Unit){
 
 @Composable
 private fun EmptyPlaceText(){
-    Text(
-        modifier = Modifier,
-        text = "앗! 아직 등록된 장소가 없어요.",
-        fontWeight = FontWeight.Bold,
-        color = Color.LightGray
-    )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(painter = painterResource(id = R.drawable.ic_empty), contentDescription = null)
+        Spacer(modifier = Modifier.size(4.dp))
+        Text(
+            modifier = Modifier,
+            text = "앗! 아직 등록된 장소가 없어요.",
+            fontWeight = FontWeight.Bold,
+            color = Color.LightGray
+        )
+    }
 }

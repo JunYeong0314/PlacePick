@@ -34,12 +34,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.jyproject.presentation.anim.horizontallyAnimatedComposableArguments
 import com.jyproject.presentation.anim.noAnimatedComposable
 import com.jyproject.presentation.anim.verticallyAnimatedComposable
-import com.jyproject.presentation.ui.addPlace.AddPlaceCheckScreen
+import com.jyproject.presentation.ui.addPlace.addCheck.AddPlaceCheckScreen
 import com.jyproject.presentation.ui.addPlace.AddPlaceScreen
 import com.jyproject.presentation.ui.home.HomeScreen
 import com.jyproject.presentation.ui.mypage.MyPageScreen
@@ -54,7 +57,8 @@ fun MainScreen(){
     var isBar by remember { mutableStateOf(true) }
 
     navController.addOnDestinationChangedListener { _, destination, _ ->
-        isBar = destination.route != Destination.ADD_PLACE_ROUTE && destination.route != Destination.ADD_PLACE_CHECK_ROUTE
+        isBar = destination.route != Destination.ADD_PLACE_ROUTE &&
+                destination.route != "${Destination.ADD_PLACE_CHECK_ROUTE}/{${Destination.ADD_PLACE_CHECK_NAME}}"
     }
 
     Scaffold(
@@ -68,8 +72,36 @@ fun MainScreen(){
             startDestination = Screen.Home.route
         ){
             noAnimatedComposable(Screen.Home.route) { HomeScreen(navController = navController) }
-            verticallyAnimatedComposable(Destination.ADD_PLACE_ROUTE) { AddPlaceScreen(navController = navController) }
-            noAnimatedComposable(Destination.ADD_PLACE_CHECK_ROUTE) { AddPlaceCheckScreen(navController = navController) }
+
+            verticallyAnimatedComposable(Destination.ADD_PLACE_ROUTE) {
+                AddPlaceScreen(
+                    navController = navController,
+                    onClickPlace = { placeName: String ->
+                        navController.navigate("${Destination.ADD_PLACE_CHECK_ROUTE}/$placeName")
+                    }
+                )
+            }
+            horizontallyAnimatedComposableArguments(
+                route = "${Destination.ADD_PLACE_CHECK_ROUTE}/{${Destination.ADD_PLACE_CHECK_NAME}}",
+                arguments = listOf(navArgument(Destination.ADD_PLACE_CHECK_NAME){
+                    type = NavType.StringType }
+                ),
+            ) { backStackEntry->
+                val arguments = requireNotNull(backStackEntry.arguments)
+                val placeName = arguments.getString(Destination.ADD_PLACE_CHECK_NAME)
+
+                AddPlaceCheckScreen(
+                    navController = navController,
+                    placeName = placeName,
+                    onClickAdd = {
+                        navController.popBackStack(
+                            route = Screen.Home.route,
+                            inclusive = true
+                        )
+                        navController.navigate(Screen.Home.route)
+                    })
+            }
+
             noAnimatedComposable(Screen.MyPage.route) { MyPageScreen(navController = navController) }
         }
 

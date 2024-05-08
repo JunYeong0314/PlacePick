@@ -1,5 +1,6 @@
 package com.jyproject.presentation.ui.addPlace
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jyproject.domain.features.place.PlaceRepository

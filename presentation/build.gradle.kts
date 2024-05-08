@@ -104,4 +104,7 @@ dependencies {
     // Naver Map
     implementation(libs.naver.map)
     implementation(libs.naver.map.location)
+
+    // Lottie
+    implementation(libs.lottie.compose)
 }

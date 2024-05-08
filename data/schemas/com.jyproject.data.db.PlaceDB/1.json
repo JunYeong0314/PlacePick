@@ -1,0 +1,40 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "0c0e9faf5f0253bea4feea9c44e55165",
+    "entities": [
+      {
+        "tableName": "place_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`no` INTEGER NOT NULL, `place` TEXT NOT NULL, PRIMARY KEY(`no`))",
+        "fields": [
+          {
+            "fieldPath": "no",
+            "columnName": "no",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "place",
+            "columnName": "place",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "no"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0c0e9faf5f0253bea4feea9c44e55165')"
+    ]
+  }
+}

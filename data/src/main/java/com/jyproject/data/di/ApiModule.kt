@@ -14,6 +14,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -22,6 +23,9 @@ import javax.inject.Singleton
 class ApiModule {
     companion object{
         const val BASE_URL = "http://192.168.0.4:4000"
+        const val CONNECT_TIMEOUT_SECONDS = 30L
+        const val READ_TIMEOUT_SECONDS = 30L
+        const val WRITE_TIMEOUT_SECONDS = 30L
     }
 
     @Qualifier
@@ -37,6 +41,9 @@ class ApiModule {
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
+            .connectTimeout(CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .readTimeout(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .writeTimeout(WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .build()
     }
 

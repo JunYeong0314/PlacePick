@@ -7,6 +7,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     alias(libs.plugins.com.google.dagger.hilt.android)
     id("com.google.gms.google-services")
+    id("androidx.room")
 }
 
 // local.properties 파일에 추가한 값 사용
@@ -18,6 +19,11 @@ android {
     namespace = "com.jyproject.data"
     compileSdk = 34
 
+    // Room schema export to allow db auto migrations between versions.
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
+
     defaultConfig {
         buildConfigField("String", "NAVER_CLIENT_ID", localProperties.getProperty("NAVER_CLIENT_ID"))
         buildConfigField("String", "NAVER_CLIENT_KEY", localProperties.getProperty("NAVER_CLIENT_KEY"))
@@ -27,6 +33,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
+
 
     buildTypes {
         release {

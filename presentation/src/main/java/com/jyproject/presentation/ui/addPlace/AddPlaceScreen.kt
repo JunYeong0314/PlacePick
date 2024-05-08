@@ -1,5 +1,6 @@
 package com.jyproject.presentation.ui.addPlace
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -42,7 +43,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,7 +58,8 @@ import com.jyproject.presentation.ui.util.Destination
 @Composable
 fun AddPlaceScreen(
     navController: NavController,
-    viewModel: AddPlaceViewModel = hiltViewModel()
+    viewModel: AddPlaceViewModel = hiltViewModel(),
+    onClickPlace: (String) -> Unit
 ){
     val focusManager = LocalFocusManager.current
     var searchText by remember { mutableStateOf("") }
@@ -84,8 +88,9 @@ fun AddPlaceScreen(
                     indication = null
                 ) {
                     focusManager.clearFocus()
-                }
-
+                },
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -114,20 +119,48 @@ fun AddPlaceScreen(
                     onValueChange = { searchText = it }
                 )
             }
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 12.dp)
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                itemsIndexed(placeList) { _, places ->
-                    places.place?.let { searchResult ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { navController.navigate(Destination.ADD_PLACE_CHECK_ROUTE) }
-                        ){
-                            Text(text = searchResult, fontSize = 18.sp)
+                if(placeList.isEmpty() && searchText.isNotBlank()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ){
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(painter = painterResource(id = R.drawable.ic_search), contentDescription = null)
+                            Spacer(modifier = Modifier.size(4.dp))
+                            Text(
+                                text = "검색결과가 없습니다.",
+                                fontWeight = FontWeight.Bold,
+                                color = Color.LightGray
+                            )
                         }
-                        Spacer(modifier = Modifier.size(10.dp))
+                    }
+                }
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 12.dp)
+                ) {
+                    itemsIndexed(placeList) { _, places ->
+                        places.place?.let { searchResult ->
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { onClickPlace(searchResult) }
+                            ){
+                                Text(text = searchResult, fontSize = 18.sp)
+                            }
+                            Spacer(modifier = Modifier.size(10.dp))
+                        }
                     }
                 }
             }
