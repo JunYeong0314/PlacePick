@@ -1,8 +1,11 @@
 package com.jyproject.presentation.ui.home
 import android.util.Log
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,9 +13,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -24,29 +32,46 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.jyproject.domain.models.Place
 import com.jyproject.presentation.R
 import com.jyproject.presentation.ui.util.Destination
+import kotlin.math.roundToInt
 
 @Composable
 fun HomeScreen(
     navController: NavController,
+    onClickCard: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ){
     val placeData = viewModel.placeData.collectAsStateWithLifecycle()
+    val cityList = listOf(
+        R.drawable.ic_city_1, R.drawable.ic_city_2,
+        R.drawable.ic_city_3, R.drawable.ic_city_4
+    )
 
     Column(
         modifier = Modifier
@@ -57,20 +82,79 @@ fun HomeScreen(
     ) {
         if(placeData.value == null) EmptyPlaceText()
         else{
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(12.dp)
+            LazyRow(
+                modifier = Modifier
             ) {
-                itemsIndexed(placeData.value!!) {_, place->
-                    place.place?.let { placeName->
-                        Text(text = placeName)
-                    }
+                itemsIndexed(placeData.value!!){index: Int, place: Place ->
+                    if(index == 0) Spacer(modifier = Modifier.size(40.dp))
+                    PlaceCard(
+                        place = place.place!!,
+                        painterId = cityList[index%4],
+                        onClickCard = onClickCard
+                    )
+                    Spacer(modifier = Modifier.size(20.dp))
                 }
-
             }
         }
     }
     AddButton(onClickAddBtn = { navController.navigate(Destination.ADD_PLACE_ROUTE)} )
+}
+
+@Composable
+private fun PlaceCard(
+    place: String,
+    painterId: Int,
+    onClickCard: (String) -> Unit
+){
+    Box(
+        modifier = Modifier
+            .width(300.dp)
+            .height(500.dp)
+            .background(
+                color = Color.White,
+                shape = RoundedCornerShape(4.dp)
+            )
+            .border(
+                width = 1.dp,
+                shape = RoundedCornerShape(4.dp),
+                color = colorResource(id = R.color.app_base)
+            )
+            .clickable { onClickCard(place) }
+    ){
+        Column(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(0.5f)
+                    .fillMaxWidth()
+                ,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(vertical = 40.dp, horizontal = 18.dp)
+                    ,
+                    text = place,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 35.sp,
+                    color = colorResource(id = R.color.app_base),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            Image(
+                modifier = Modifier
+                    .weight(0.5f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+                ,
+                painter = painterResource(id = painterId),
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+        }
+    }
 }
 
 @Composable
@@ -127,3 +211,48 @@ private fun EmptyPlaceText(){
         )
     }
 }
+
+/* 개발 진행중
+@Composable
+private fun ex(
+    onSwipeLeft: () -> Unit,
+    onSwipeRight: () -> Unit,
+    swipeThreshold: Float = 50f,
+    sensitivityFactor: Float = 3f,
+    content: @Composable () -> Unit
+){
+    var offset by remember { mutableFloatStateOf(0f) }
+    var dismiss by remember { mutableStateOf(false) }
+    val density = LocalDensity.current.density
+
+    Box(modifier = Modifier
+        .offset { IntOffset(offset.roundToInt(), 0) }
+        .pointerInput(Unit) {
+            detectHorizontalDragGestures(onDragEnd = {
+                if (dismiss) {
+                    if (offset > swipeThreshold) {
+                        onSwipeLeft()
+                    } else if (offset < -swipeThreshold) {
+                        onSwipeRight()
+                    }
+                    offset = 0f
+                }
+                dismiss = false
+            }) { change, dragAmount ->
+                offset += (dragAmount / density) * sensitivityFactor
+                when {
+                    offset > swipeThreshold -> {
+                        dismiss = true
+                    }
+
+                    offset < -swipeThreshold -> {
+                        dismiss = true
+                    }
+                }
+                if (change.positionChange() != Offset.Zero) change.consume()
+            }
+        }) {
+        content()
+    }
+}
+*/

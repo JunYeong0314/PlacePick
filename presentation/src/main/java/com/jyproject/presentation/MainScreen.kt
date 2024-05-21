@@ -45,6 +45,7 @@ import com.jyproject.presentation.anim.verticallyAnimatedComposable
 import com.jyproject.presentation.ui.addPlace.addCheck.AddPlaceCheckScreen
 import com.jyproject.presentation.ui.addPlace.AddPlaceScreen
 import com.jyproject.presentation.ui.home.HomeScreen
+import com.jyproject.presentation.ui.home.placeDetail.PlaceDetailScreen
 import com.jyproject.presentation.ui.mypage.MyPageScreen
 import com.jyproject.presentation.ui.util.Destination
 
@@ -71,7 +72,14 @@ fun MainScreen(){
             navController = navController,
             startDestination = Screen.Home.route
         ){
-            noAnimatedComposable(Screen.Home.route) { HomeScreen(navController = navController) }
+            noAnimatedComposable(Screen.Home.route) {
+                HomeScreen(
+                    navController = navController,
+                    onClickCard = { place->
+                        navController.navigate("${Destination.PLACE_DETAIL_ROUTE}/$place")
+                    }
+                )
+            }
 
             verticallyAnimatedComposable(Destination.ADD_PLACE_ROUTE) {
                 AddPlaceScreen(
@@ -103,6 +111,21 @@ fun MainScreen(){
             }
 
             noAnimatedComposable(Screen.MyPage.route) { MyPageScreen(navController = navController) }
+
+            horizontallyAnimatedComposableArguments(
+                route = "${Destination.PLACE_DETAIL_ROUTE}/{${Destination.PLACE_DETAIL_NAME}}",
+                arguments = listOf(navArgument(Destination.PLACE_DETAIL_NAME){
+                    type = NavType.StringType }
+                ),
+            ){ backStackEntry ->
+                val arguments = requireNotNull(backStackEntry.arguments)
+                val place = arguments.getString(Destination.PLACE_DETAIL_NAME)
+
+                PlaceDetailScreen(
+                    navController = navController,
+                    place = place
+                )
+            }
         }
 
     }

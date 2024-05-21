@@ -28,6 +28,7 @@ android {
         buildConfigField("String", "NAVER_CLIENT_ID", localProperties.getProperty("NAVER_CLIENT_ID"))
         buildConfigField("String", "NAVER_CLIENT_KEY", localProperties.getProperty("NAVER_CLIENT_KEY"))
         buildConfigField("String", "KAKAO_NATIVE_KEY", localProperties.getProperty("KAKAO_NATIVE_KEY"))
+        buildConfigField("String", "SEOUL_API_KEY", localProperties.getProperty("SEOUL_API_KEY"))
 
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

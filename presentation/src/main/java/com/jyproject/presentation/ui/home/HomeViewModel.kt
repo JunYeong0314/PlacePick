@@ -16,7 +16,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val placeDataRepository: PlaceDataRepository,
     private val placeReadUseCase: PlaceReadUseCase
 ): ViewModel() {
     private val _placeData = MutableStateFlow<List<Place>?>(null)
@@ -28,7 +27,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getPlaceData(){
         viewModelScope.launch {
-            placeDataRepository.readPlace().collect{ place->
+            placeReadUseCase().collect{ place->
                 _placeData.update { place }
             }
         }
