@@ -1,6 +1,8 @@
 package com.jyproject.presentation
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -49,85 +50,93 @@ import com.jyproject.presentation.ui.home.placeDetail.PlaceDetailScreen
 import com.jyproject.presentation.ui.mypage.MyPageScreen
 import com.jyproject.presentation.ui.util.Destination
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun MainScreen(){
     val items = listOf(
-        Screen.Home, Screen.Exam, Screen.MyPage,
+        Screen.Home, Screen.MyPage,
     )
     val navController = rememberNavController()
     var isBar by remember { mutableStateOf(true) }
 
     navController.addOnDestinationChangedListener { _, destination, _ ->
         isBar = destination.route != Destination.ADD_PLACE_ROUTE &&
-                destination.route != "${Destination.ADD_PLACE_CHECK_ROUTE}/{${Destination.ADD_PLACE_CHECK_NAME}}"
+                destination.route != "${Destination.ADD_PLACE_CHECK_ROUTE}/{${Destination.ADD_PLACE_CHECK_NAME}}" &&
+                destination.route != "${Destination.PLACE_DETAIL_ROUTE}/{${Destination.PLACE_DETAIL_NAME}}"
     }
 
-    Scaffold(
-        // A page that hides the Bar
-        bottomBar = { if(isBar) BottomBar(navController = navController, items = items) },
-        topBar = { if(isBar) TopBar() }
-    ) { innerPadding->
-        NavHost(
-            modifier = Modifier.padding(innerPadding),
-            navController = navController,
-            startDestination = Screen.Home.route
-        ){
-            noAnimatedComposable(Screen.Home.route) {
-                HomeScreen(
-                    navController = navController,
-                    onClickCard = { place->
-                        navController.navigate("${Destination.PLACE_DETAIL_ROUTE}/$place")
-                    }
-                )
+    SharedTransitionLayout {
+        Scaffold(
+            // A page that hides the Bar
+            bottomBar = { if(isBar) BottomBar(navController = navController, items = items) },
+            topBar = { if(isBar) TopBar() }
+        ) { innerPadding->
+            NavHost(
+                modifier = Modifier.padding(innerPadding),
+                navController = navController,
+                startDestination = Screen.Home.route
+            ){
+                noAnimatedComposable(Screen.Home.route,) {
+                    HomeScreen(
+                        navController = navController,
+                        onClickCard = { place->
+                            navController.navigate("${Destination.PLACE_DETAIL_ROUTE}/$place")
+                        },
+                        this@SharedTransitionLayout,
+                        this@noAnimatedComposable
+                    )
+                }
+
+                verticallyAnimatedComposable(Destination.ADD_PLACE_ROUTE) {
+                    AddPlaceScreen(
+                        navController = navController,
+                        onClickPlace = { placeName: String ->
+                            navController.navigate("${Destination.ADD_PLACE_CHECK_ROUTE}/$placeName")
+                        }
+                    )
+                }
+                horizontallyAnimatedComposableArguments(
+                    route = "${Destination.ADD_PLACE_CHECK_ROUTE}/{${Destination.ADD_PLACE_CHECK_NAME}}",
+                    arguments = listOf(navArgument(Destination.ADD_PLACE_CHECK_NAME){
+                        type = NavType.StringType }
+                    ),
+                ) { backStackEntry->
+                    val arguments = requireNotNull(backStackEntry.arguments)
+                    val placeName = arguments.getString(Destination.ADD_PLACE_CHECK_NAME)
+
+                    AddPlaceCheckScreen(
+                        navController = navController,
+                        placeName = placeName,
+                        onClickAdd = {
+                            navController.popBackStack(
+                                route = Screen.Home.route,
+                                inclusive = true
+                            )
+                            navController.navigate(Screen.Home.route)
+                        })
+                }
+
+                noAnimatedComposable(Screen.MyPage.route) { MyPageScreen(navController = navController) }
+
+                horizontallyAnimatedComposableArguments(
+                    route = "${Destination.PLACE_DETAIL_ROUTE}/{${Destination.PLACE_DETAIL_NAME}}",
+                    arguments = listOf(navArgument(Destination.PLACE_DETAIL_NAME){
+                        type = NavType.StringType }
+                    ),
+                ){ backStackEntry ->
+                    val arguments = requireNotNull(backStackEntry.arguments)
+                    val place = arguments.getString(Destination.PLACE_DETAIL_NAME)
+
+                    PlaceDetailScreen(
+                        navController = navController,
+                        place = place,
+                        this@SharedTransitionLayout,
+                        this@horizontallyAnimatedComposableArguments
+                    )
+                }
             }
 
-            verticallyAnimatedComposable(Destination.ADD_PLACE_ROUTE) {
-                AddPlaceScreen(
-                    navController = navController,
-                    onClickPlace = { placeName: String ->
-                        navController.navigate("${Destination.ADD_PLACE_CHECK_ROUTE}/$placeName")
-                    }
-                )
-            }
-            horizontallyAnimatedComposableArguments(
-                route = "${Destination.ADD_PLACE_CHECK_ROUTE}/{${Destination.ADD_PLACE_CHECK_NAME}}",
-                arguments = listOf(navArgument(Destination.ADD_PLACE_CHECK_NAME){
-                    type = NavType.StringType }
-                ),
-            ) { backStackEntry->
-                val arguments = requireNotNull(backStackEntry.arguments)
-                val placeName = arguments.getString(Destination.ADD_PLACE_CHECK_NAME)
-
-                AddPlaceCheckScreen(
-                    navController = navController,
-                    placeName = placeName,
-                    onClickAdd = {
-                        navController.popBackStack(
-                            route = Screen.Home.route,
-                            inclusive = true
-                        )
-                        navController.navigate(Screen.Home.route)
-                    })
-            }
-
-            noAnimatedComposable(Screen.MyPage.route) { MyPageScreen(navController = navController) }
-
-            horizontallyAnimatedComposableArguments(
-                route = "${Destination.PLACE_DETAIL_ROUTE}/{${Destination.PLACE_DETAIL_NAME}}",
-                arguments = listOf(navArgument(Destination.PLACE_DETAIL_NAME){
-                    type = NavType.StringType }
-                ),
-            ){ backStackEntry ->
-                val arguments = requireNotNull(backStackEntry.arguments)
-                val place = arguments.getString(Destination.PLACE_DETAIL_NAME)
-
-                PlaceDetailScreen(
-                    navController = navController,
-                    place = place
-                )
-            }
         }
-
     }
 
 }
@@ -193,5 +202,4 @@ private fun TopBar(){
 sealed class Screen(val route: String, @StringRes val resourceId: Int, val icon: ImageVector){
     data object Home: Screen("home", R.string.route_home, icon = Icons.Filled.Home)
     data object MyPage: Screen("mypage", R.string.route_mypage, icon = Icons.Filled.FavoriteBorder)
-    data object Exam: Screen("example", R.string.example, icon = Icons.Filled.Menu)
 }

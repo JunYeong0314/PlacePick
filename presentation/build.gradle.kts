@@ -5,7 +5,6 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     alias(libs.plugins.com.google.dagger.hilt.android)
-    id("com.google.gms.google-services")
 }
 
 // local.properties 파일에 추가한 값 사용
@@ -72,6 +71,7 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     // compose
+    implementation(libs.androidx.animation)
     implementation(libs.lifecycle)
     implementation(libs.compose)
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))

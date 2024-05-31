@@ -1,6 +1,8 @@
 [versions]
-agp = "8.3.1"
+agp = "8.3.2"
 datastore-preferences = "1.1.1"
+gradle = "8.0.2"
+kotlin-gradle-plugin = "1.8.0"
 lottie-compose = "6.1.0"
 map-sdk = "3.18.0"
 moshi-kotlin = "1.12.0"
@@ -33,15 +35,18 @@ retrofit = "2.9.0"
 datastore = "1.0.0"
 roomdb = "2.6.1"
 squareup-retrofit = "2.9.0"
+animation = "1.7.0-beta01"
 
 [libraries]
 androidx-datastore-preferences-v111 = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore-preferences" }
 converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "squareup-retrofit" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-gradle-plugin" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie-compose" }
 map-sdk = { module = "com.naver.maps:map-sdk", version.ref = "map-sdk" }
@@ -53,6 +58,7 @@ flow = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", vers
 kotlin-coroutines-play = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
 
 # Compose
+androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
 compose = { group = "androidx.activity", name = "activity-compose", version.ref = "compose"}
 compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "compose-navigation"}
 compose-material = { group = "androidx.compose.material", name = "material", version.ref = "compose-material" }
@@ -95,7 +101,6 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "squareup
 
 [plugins]
 com-android-library = { id = "com.android.library", version.ref = "agp" }
-org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
 org-jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "org-jetbrains-kotlin-jvm" }
 
 com-google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }

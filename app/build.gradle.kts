@@ -5,7 +5,6 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     alias(libs.plugins.com.google.dagger.hilt.android)
-    id("com.google.gms.google-services")
 }
 
 // local.properties 파일에 추가한 값 사용

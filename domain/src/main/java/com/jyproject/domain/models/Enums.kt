@@ -4,5 +4,5 @@ enum class KakaoLoginState {
 }
 
 enum class LoginState {
-    INIT, EXIST, ERROR, LOADING
+    INIT, EXIST, ERROR, LOADING, BLANK
 }

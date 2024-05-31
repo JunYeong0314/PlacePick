@@ -58,9 +58,8 @@ import com.jyproject.presentation.anim.LottieAddPlaceCheck
 
     LaunchedEffect(loginState) {
         when(loginState){
-            LoginState.LOADING -> {
-                isLoading = true
-            }
+            LoginState.BLANK -> { isLoading = false }
+            LoginState.LOADING -> { isLoading = true }
             LoginState.EXIST -> { isLogin() }
             LoginState.INIT -> { viewModel.signUp() }
             LoginState.ERROR -> {

@@ -6,7 +6,6 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     alias(libs.plugins.com.google.dagger.hilt.android)
-    id("com.google.gms.google-services")
     id("androidx.room")
 }
 
@@ -67,11 +66,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
-    // firebase
-    implementation(platform(libs.firebase))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-firestore")
 
     // hilt
     implementation(libs.hilt.android)

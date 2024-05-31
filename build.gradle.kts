@@ -1,9 +1,11 @@
 buildscript {
-    dependencies {
-        classpath("com.google.gms:google-services:4.4.1")
-    }
     repositories{
         google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath(libs.gradle)
+        classpath(libs.kotlin.gradle.plugin)
     }
 }
 
@@ -16,6 +18,5 @@ plugins {
     alias(libs.plugins.com.android.library) apply false
     alias(libs.plugins.org.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.com.google.dagger.hilt.android) apply false
-    alias(libs.plugins.com.google.gms.google.services) apply false
     id("androidx.room") version "2.6.1" apply false
 }

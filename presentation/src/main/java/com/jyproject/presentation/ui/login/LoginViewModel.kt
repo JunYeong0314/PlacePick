@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,18 +25,22 @@ class LoginViewModel @Inject constructor(
     private val checkMemberUseCase: CheckMemberUseCase,
     private val userDataRepository: UserDataRepository
 ): ViewModel() {
-    private val _loginFlow = MutableStateFlow<LoginState>(LoginState.LOADING)
+    private val _loginFlow = MutableStateFlow<LoginState>(LoginState.BLANK)
     val loginFlow: StateFlow<LoginState> = _loginFlow.asStateFlow()
 
     private var userNumber = ""
 
     init {
         viewModelScope.launch {
-            isMember(userDataRepository.getUserData().userNum)
+            if(userDataRepository.getUserData().userNum.isNotBlank()){
+                _loginFlow.update { LoginState.LOADING }
+                isMember(userDataRepository.getUserData().userNum)
+            }
         }
     }
 
     fun startKakaoLogin(){
+        _loginFlow.update { LoginState.LOADING }
         kakaoLoginUseCase(updateSocialToken = {}) { userNum->
             userNum?.let {
                 isMember(userNum)
@@ -46,6 +51,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun startNaverLogin(context: Context){
+        _loginFlow.update { LoginState.LOADING }
         naverLoginUseCase(context = context, updateSocialToken = {}) { userNum->
             userNum?.let {
                 isMember(userNum)
@@ -69,12 +75,12 @@ class LoginViewModel @Inject constructor(
     private fun isMember(userNum: String){
         viewModelScope.launch {
             checkMemberUseCase(userNum)
-                .onFailure { _loginFlow.value = LoginState.ERROR }
+                .onFailure { _loginFlow.update { LoginState.ERROR } }
                 .onSuccess { isExist->
                     when(isExist){
-                        true -> _loginFlow.value = LoginState.EXIST
-                        false -> _loginFlow.value = LoginState.INIT
-                        else -> _loginFlow.value = LoginState.ERROR
+                        true -> _loginFlow.update { LoginState.EXIST }
+                        false -> _loginFlow.update { LoginState.INIT }
+                        else -> _loginFlow.update { LoginState.ERROR }
                     }
                 }
         }
