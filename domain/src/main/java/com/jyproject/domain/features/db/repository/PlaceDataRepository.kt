@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PlaceDataRepository {
     fun readPlace(): Flow<List<Place>>
-    suspend fun addPlace(place: String)
+    suspend fun addPlace(place: String, placeArea: String)
     suspend fun deletePlace(place: String)
     suspend fun findPlace(place: String): Boolean
 }

@@ -9,6 +9,8 @@ data class SearchResponse(
 )
 
 data class Place(
+    @Json(name = "AREA_RANGE")
+    val placeArea: String?,
     @Json(name = "AREA_NM")
     val place: String?,
     @Json(name = "_id")

@@ -132,3 +132,33 @@ fun NavGraphBuilder.horizontallyAnimatedComposableArguments(
         }
     )
 }
+
+fun NavGraphBuilder.verticallyAnimatedComposableArguments(
+    route: String,
+    arguments: List<NamedNavArgument>? = null,
+    content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit,
+){
+    composable(
+        route = route,
+        content = content,
+        arguments = arguments ?: emptyList(),
+        enterTransition = {
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.Up,
+                animationSpec = tween(animDurationMillis)
+            )
+        },
+        exitTransition = {
+            fadeOut(animationSpec = tween(animDurationMillis))
+        },
+        popEnterTransition = {
+            fadeIn(animationSpec = tween(animDurationMillis))
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Down,
+                animationSpec = tween(animDurationMillis)
+            )
+        },
+    )
+}

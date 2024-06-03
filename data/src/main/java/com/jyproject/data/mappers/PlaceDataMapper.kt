@@ -12,7 +12,8 @@ class PlaceDataMapper @Inject constructor() {
         return searchResponse.places?.map {
             Place(
                 no = it?.no,
-                place = it?.place
+                place = it?.place,
+                placeArea = it?.placeArea
             )
         }
     }
@@ -26,7 +27,7 @@ class PlaceDataMapper @Inject constructor() {
         )
     }
 
-    fun mapperToAgeRate(placeInfoData: PlaceInfoData?): List<Float?> {
+    private fun mapperToAgeRate(placeInfoData: PlaceInfoData?): List<Float?> {
         return listOf(
             placeInfoData?.rate0?.toFloat(), placeInfoData?.rate10?.toFloat(),
             placeInfoData?.rate20?.toFloat(), placeInfoData?.rate30?.toFloat(),
@@ -35,7 +36,7 @@ class PlaceDataMapper @Inject constructor() {
         )
     }
 
-    fun mapperToPrediction(placeInfoData: PlaceInfoData?): List<PredictionInfo>? {
+    private fun mapperToPrediction(placeInfoData: PlaceInfoData?): List<PredictionInfo>? {
         return placeInfoData?.predictionObject?.map {
             PredictionInfo(
                 time = it?.predictionTime,

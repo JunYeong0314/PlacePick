@@ -8,6 +8,6 @@ import retrofit2.http.Query
 interface SearchPlaceService {
     @GET("/api/place/search")
     suspend fun getSearchResult(
-        @Query("searchPlace") searchPlace: String
+        @Query("placeName") placeName: String
     ): Response<SearchResponse>
 }

@@ -10,5 +10,7 @@ data class PlaceEntity(
     @ColumnInfo(name = "no")
     val no: Int = 0,
     @ColumnInfo(name = "place")
-    val place: String
+    val place: String,
+    @ColumnInfo(name = "place_area", defaultValue = "Unknown")
+    val placeArea: String
 )

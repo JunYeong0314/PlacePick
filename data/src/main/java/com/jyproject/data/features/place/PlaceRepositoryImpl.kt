@@ -17,9 +17,9 @@ class PlaceRepositoryImpl @Inject constructor(
     private val getPlaceInfoService: GetPlaceInfoService,
     private val placeDataMapper: PlaceDataMapper
 ): PlaceRepository {
-    override suspend fun searchPlace(searchPlace: String): Result<List<Place>?> {
+    override suspend fun searchPlace(placeName: String): Result<List<Place>?> {
         return runCatching {
-            val result = searchPlaceService.getSearchResult(searchPlace)
+            val result = searchPlaceService.getSearchResult(placeName)
             result.body()?.let { response ->
                 placeDataMapper.mapperToPlaces(response)
             }

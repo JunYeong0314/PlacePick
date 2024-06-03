@@ -7,6 +7,7 @@ class PlaceAddUseCase @Inject constructor(
     private val placeDataRepository: PlaceDataRepository
 ) {
     suspend operator fun invoke(
-        place: String
-    ) = placeDataRepository.addPlace(place)
+        place: String,
+        placeArea: String
+    ) = placeDataRepository.addPlace(place, placeArea)
 }

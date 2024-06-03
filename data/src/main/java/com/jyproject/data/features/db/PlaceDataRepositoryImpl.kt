@@ -25,9 +25,9 @@ class PlaceDataRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun addPlace(place: String) {
+    override suspend fun addPlace(place: String, placeArea: String) {
         withContext(Dispatchers.IO){
-            placeDAO.addPlace(PlaceEntity(place = place))
+            placeDAO.addPlace(PlaceEntity(place = place, placeArea = placeArea))
         }
     }
 

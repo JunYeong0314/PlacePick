@@ -14,13 +14,10 @@ import androidx.navigation.NavController
 import com.jyproject.presentation.di.ViewModelFactoryProvider
 import dagger.hilt.android.EntryPointAccessors
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun PlaceDetailScreen(
     navController: NavController,
     place: String?,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedVisibilityScope
 ){
     val factory = EntryPointAccessors.fromActivity(
         LocalContext.current as Activity,

@@ -7,6 +7,6 @@ class SearchPlaceUseCase @Inject constructor(
     private val placeRepository: PlaceRepository
 ) {
     suspend operator fun invoke(
-        searchPlace: String
-    ) = placeRepository.searchPlace(searchPlace)
+        placeName: String
+    ) = placeRepository.searchPlace(placeName)
 }

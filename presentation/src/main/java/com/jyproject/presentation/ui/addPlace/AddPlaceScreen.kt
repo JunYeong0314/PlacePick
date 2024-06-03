@@ -59,7 +59,7 @@ import com.jyproject.presentation.ui.util.Destination
 fun AddPlaceScreen(
     navController: NavController,
     viewModel: AddPlaceViewModel = hiltViewModel(),
-    onClickPlace: (String) -> Unit
+    onClickPlace: (String?) -> Unit
 ){
     val focusManager = LocalFocusManager.current
     var searchText by remember { mutableStateOf("") }
@@ -151,13 +151,13 @@ fun AddPlaceScreen(
                     contentPadding = PaddingValues(horizontal = 12.dp)
                 ) {
                     itemsIndexed(placeList) { _, places ->
-                        places.place?.let { searchResult ->
+                        places.let { searchResult ->
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { onClickPlace(searchResult) }
+                                    .clickable { onClickPlace(searchResult.place) }
                             ){
-                                Text(text = searchResult, fontSize = 18.sp)
+                                searchResult.place?.let { Text(text = it, fontSize = 18.sp) }
                             }
                             Spacer(modifier = Modifier.size(10.dp))
                         }

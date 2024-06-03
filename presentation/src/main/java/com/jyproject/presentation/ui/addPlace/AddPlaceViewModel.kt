@@ -23,9 +23,9 @@ class AddPlaceViewModel @Inject constructor(
     private val _searchError = MutableStateFlow<Boolean>(false)
     val searchError: StateFlow<Boolean> = _searchError.asStateFlow()
 
-    fun searchPlace(searchPlace: String){
+    fun searchPlace(placeName: String){
         viewModelScope.launch {
-            placeRepository.searchPlace(searchPlace)
+            placeRepository.searchPlace(placeName)
                 .onFailure { _searchError.update { true } }
                 .onSuccess { placeList->
                     placeList?.let { _placeList.update { placeList } }

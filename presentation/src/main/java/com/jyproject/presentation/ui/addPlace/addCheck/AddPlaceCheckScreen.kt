@@ -1,5 +1,6 @@
 package com.jyproject.presentation.ui.addPlace.addCheck
 
+import android.app.Activity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,9 +38,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.jyproject.presentation.R
 import com.jyproject.presentation.anim.LottieAddPlaceCheck
+import com.jyproject.presentation.di.ViewModelFactoryProvider
+import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.launch
 
 @Composable
@@ -46,15 +51,31 @@ fun AddPlaceCheckScreen(
     navController: NavController,
     placeName: String?,
     onClickAdd: () -> Unit,
-    viewModel: AddPlaceCheckViewModel = hiltViewModel()
 ){
+    val factory = EntryPointAccessors.fromActivity(
+        LocalContext.current as Activity,
+        ViewModelFactoryProvider::class.java
+    ).addPlaceCheckViewModelFactory()
+
+    val viewModel: AddPlaceCheckViewModel = viewModel(
+        factory = AddPlaceCheckViewModel.provideAddPlaceCheckViewModelFactory(factory, placeName ?: "")
+    )
+
     val snackBarHostState = remember { SnackbarHostState() }
     val dupPlaceState by viewModel.checkDupPlace.collectAsStateWithLifecycle()
+    val errorState by viewModel.errorObserve.collectAsStateWithLifecycle()
 
-    LaunchedEffect(dupPlaceState) {
+    LaunchedEffect(dupPlaceState, errorState) {
         if(dupPlaceState){
             snackBarHostState.showSnackbar(
                 message = "이미 등록되어있는 장소입니다.",
+                duration = SnackbarDuration.Short
+            )
+        }
+
+        if(errorState){
+            snackBarHostState.showSnackbar(
+                message = "[Error] 장소를 추가 할 수 없습니다.",
                 duration = SnackbarDuration.Short
             )
         }

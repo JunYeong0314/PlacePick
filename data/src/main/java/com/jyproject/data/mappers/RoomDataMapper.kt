@@ -9,7 +9,8 @@ class RoomDataMapper @Inject constructor() {
         return placeList.map { entity->
             Place(
                 no = entity.no,
-                place = entity.place
+                place = entity.place,
+                placeArea = entity.placeArea
             )
         }
     }

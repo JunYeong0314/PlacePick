@@ -43,13 +43,10 @@ import com.jyproject.domain.models.Place
 import com.jyproject.presentation.R
 import com.jyproject.presentation.ui.util.Destination
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
     onClickCard: (String) -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedVisibilityScope,
     viewModel: HomeViewModel = hiltViewModel()
 ){
     val placeData = viewModel.placeData.collectAsStateWithLifecycle()
@@ -77,8 +74,6 @@ fun HomeScreen(
                         place = place.place!!,
                         painterId = cityList[index%4],
                         onClickCard = onClickCard,
-                        sharedTransitionScope,
-                        animatedContentScope,
                     )
                     Spacer(modifier = Modifier.size(20.dp))
                 }
@@ -88,68 +83,59 @@ fun HomeScreen(
     AddButton(onClickAddBtn = { navController.navigate(Destination.ADD_PLACE_ROUTE)} )
 }
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun PlaceCard(
     place: String,
     painterId: Int,
     onClickCard: (String) -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedVisibilityScope,
 ){
-    with(sharedTransitionScope){
-        Box(
-            modifier = Modifier
-                .width(300.dp)
-                .height(500.dp)
-                .sharedElement(
-                    sharedTransitionScope.rememberSharedContentState(key = "place-$place"),
-                    animatedVisibilityScope = animatedContentScope
-                )
-                .background(
-                    color = Color.White,
-                    shape = RoundedCornerShape(4.dp)
-                )
-                .border(
-                    width = 1.dp,
-                    shape = RoundedCornerShape(4.dp),
-                    color = colorResource(id = R.color.app_base)
-                )
-                .clickable { onClickCard(place) }
-        ){
+    Box(
+        modifier = Modifier
+            .width(300.dp)
+            .height(500.dp)
+            .background(
+                color = Color.White,
+                shape = RoundedCornerShape(4.dp)
+            )
+            .border(
+                width = 1.dp,
+                shape = RoundedCornerShape(4.dp),
+                color = colorResource(id = R.color.app_base)
+            )
+            .clickable { onClickCard(place) }
+    ){
+        Column(
+            modifier = Modifier.fillMaxSize(),
+        ) {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .weight(0.5f)
+                    .fillMaxWidth()
+                ,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
+                Text(
                     modifier = Modifier
-                        .weight(0.5f)
-                        .fillMaxWidth()
+                        .padding(vertical = 40.dp, horizontal = 18.dp)
                     ,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(vertical = 40.dp, horizontal = 18.dp)
-                        ,
-                        text = place,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 35.sp,
-                        color = colorResource(id = R.color.app_base),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-                Image(
-                    modifier = Modifier
-                        .weight(0.5f)
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                    ,
-                    painter = painterResource(id = painterId),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop
+                    text = place,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 35.sp,
+                    color = colorResource(id = R.color.app_base),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
+            Image(
+                modifier = Modifier
+                    .weight(0.5f)
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+                ,
+                painter = painterResource(id = painterId),
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
         }
     }
 }
