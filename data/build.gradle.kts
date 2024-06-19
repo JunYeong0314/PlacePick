@@ -1,4 +1,6 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.gradle.configurationcache.extensions.capitalized
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.Properties
 
 plugins {
@@ -28,6 +30,8 @@ android {
         buildConfigField("String", "NAVER_CLIENT_KEY", localProperties.getProperty("NAVER_CLIENT_KEY"))
         buildConfigField("String", "KAKAO_NATIVE_KEY", localProperties.getProperty("KAKAO_NATIVE_KEY"))
         buildConfigField("String", "SEOUL_API_KEY", localProperties.getProperty("SEOUL_API_KEY"))
+        buildConfigField("String", "SEOUL_URL", localProperties.getProperty("SEOUL_URL"))
+        buildConfigField("String", "BASE_URL", localProperties.getProperty("BASE_URL"))
 
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -43,6 +47,7 @@ android {
                 "proguard-rules.pro"
             )
         }
+        
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -56,6 +61,7 @@ android {
     }
 
 }
+
 
 dependencies {
     implementation(project(":domain"))

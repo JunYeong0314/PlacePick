@@ -1,8 +1,4 @@
 package com.jyproject.presentation.ui.home
-import android.util.Log
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -54,7 +50,6 @@ fun HomeScreen(
         R.drawable.ic_city_1, R.drawable.ic_city_2,
         R.drawable.ic_city_3, R.drawable.ic_city_4
     )
-    Log.d("HOME", placeData.value.toString())
 
     Column(
         modifier = Modifier

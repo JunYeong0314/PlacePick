@@ -128,6 +128,13 @@ fun MainScreen(){
                 PlaceDetailScreen(
                     navController = navController,
                     place = place,
+                    onClickDeletePlace = {
+                        navController.popBackStack(
+                            route = Screen.Home.route,
+                            inclusive = true
+                        )
+                        navController.navigate(Screen.Home.route)
+                    }
                 )
             }
         }

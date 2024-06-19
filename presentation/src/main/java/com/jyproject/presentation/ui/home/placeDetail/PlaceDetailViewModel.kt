@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.jyproject.domain.features.db.usecase.PlaceDeleteUseCase
 import com.jyproject.domain.features.place.usecase.GetPlaceInfoUseCase
 import com.jyproject.domain.models.PlaceInfo
 import dagger.assisted.Assisted
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class PlaceDetailViewModel @AssistedInject constructor(
     @Assisted private val place: String,
     private val getPlaceInfoUseCase: GetPlaceInfoUseCase,
+    private val placeDeleteUseCase: PlaceDeleteUseCase
 ): ViewModel() {
     private val _placeInfo = MutableStateFlow<PlaceInfo?>(null)
     val placeInfo = _placeInfo.asStateFlow()
@@ -28,6 +30,12 @@ class PlaceDetailViewModel @AssistedInject constructor(
 
     init {
         getPlaceInfo(place)
+    }
+
+    fun deletePlace(place: String){
+        viewModelScope.launch {
+            placeDeleteUseCase(place)
+        }
     }
 
     private fun getPlaceInfo(place: String){
