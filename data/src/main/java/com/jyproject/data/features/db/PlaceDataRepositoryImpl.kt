@@ -42,4 +42,12 @@ class PlaceDataRepositoryImpl @Inject constructor(
             placeDAO.findPlace(place) != null
         }
     }
+
+    override suspend fun getPlaceInfo(place: String): Place? {
+        return withContext(Dispatchers.IO){
+            placeDAO.findPlace(place)?.let { placeEntity ->
+                Place(no = null, place = placeEntity.place, placeArea = placeEntity.placeArea)
+            }
+        }
+    }
 }

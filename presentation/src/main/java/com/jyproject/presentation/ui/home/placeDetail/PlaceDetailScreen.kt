@@ -1,19 +1,23 @@
 package com.jyproject.presentation.ui.home.placeDetail
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
@@ -31,7 +35,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
@@ -63,6 +66,7 @@ fun PlaceDetailScreen(
         factory = PlaceDetailViewModel.providePlaceDetailViewModelFactory(factory, place ?: "")
     )
     val placeInfo = viewModel.placeInfo.collectAsStateWithLifecycle()
+    val placeDBInfo = viewModel.placeDBInfo.collectAsStateWithLifecycle()
 
     LaunchedEffect(placeInfo.value) {
 
@@ -74,8 +78,10 @@ fun PlaceDetailScreen(
             topBar = {
                 DetailTopBar(
                     place = place,
+                    placeArea = placeDBInfo.value?.placeArea,
                     viewModel = viewModel,
-                    onClickDeletePlace = onClickDeletePlace
+                    onClickDeletePlace = onClickDeletePlace,
+                    onClickBackBtn = { navController.navigateUp() }
                 )
             }
         ) { innerPadding->
@@ -91,26 +97,34 @@ fun PlaceDetailScreen(
 @Composable
 private fun DetailTopBar(
     place: String,
+    placeArea: String?,
     viewModel: PlaceDetailViewModel,
-    onClickDeletePlace: () -> Unit
+    onClickDeletePlace: () -> Unit,
+    onClickBackBtn: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     val density = LocalDensity.current
     var offsetX by remember { mutableStateOf(0.dp) }
     var parentWidth by remember { mutableIntStateOf(0) }
-    var showDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var showInfoDialog by remember { mutableStateOf(false) }
 
-    if(showDialog) {
+    if(showDeleteDialog) {
         DeleteCheckDialog(
-            onDismissRequest = { showDialog = false },
+            onDismissRequest = { showDeleteDialog = false },
             onConfirmation = {
                 viewModel.deletePlace(place)
                 onClickDeletePlace()
-                showDialog = false
+                showDeleteDialog = false
             }
         )
     }
 
+    if(showInfoDialog) {
+        PlaceInfoDialog(onConfirmation = { showInfoDialog = false }, place = place, placeArea = placeArea)
+    }
+
+    // Title
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -130,6 +144,19 @@ private fun DetailTopBar(
         )
     }
 
+    // Back Button
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart){
+        IconButton(onClick = { onClickBackBtn() }) {
+            Icon(
+                modifier = Modifier.size(36.dp),
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                contentDescription = null,
+                tint = Color.LightGray
+            )
+        }
+    }
+
+    // Menu Button
     Box(
         modifier = Modifier
             .fillMaxWidth(),
@@ -150,7 +177,6 @@ private fun DetailTopBar(
             modifier = Modifier
                 .onPlaced {
                     val popUpWidthPx = parentWidth - it.size.width
-
                     offsetX = with(density) {
                         popUpWidthPx.toDp()
                     }
@@ -162,11 +188,17 @@ private fun DetailTopBar(
         ) {
             DropdownMenuItem(
                 text = { Text(text = "삭제") },
-                onClick = { showDialog = true }
+                onClick = {
+                    showDeleteDialog = true
+                    expanded = false
+                }
             )
             DropdownMenuItem(
                 text = { Text(text = "정보") },
-                onClick = { /*TODO*/ }
+                onClick = {
+                    showInfoDialog = true
+                    expanded = false
+                }
             )
         }
     }
@@ -210,6 +242,44 @@ private fun DeleteCheckDialog(
             }
         },
     )
+}
 
+@Composable
+private fun PlaceInfoDialog(
+    onConfirmation: () -> Unit,
+    place: String,
+    placeArea: String?
+){
+    AlertDialog(
+        modifier = Modifier
+            .width(300.dp)
+            .height(220.dp),
+        containerColor = Color.White,
+        text = {
+           Column(
+               modifier = Modifier.fillMaxSize(),
+               horizontalAlignment = Alignment.CenterHorizontally,
+               verticalArrangement = Arrangement.Center
+           ) {
+               Icon(
+                   modifier = Modifier.size(50.dp),
+                   imageVector = Icons.Default.LocationOn,
+                   contentDescription = null,
+                   tint = colorResource(id = R.color.app_base)
+               )
+               Spacer(modifier = Modifier.size(8.dp))
+               Text(text = "지역명: $place")
+               Text(text = "관할구: $placeArea")
+           }
+        },
+        onDismissRequest = { onConfirmation() },
+        confirmButton = { 
+            TextButton(onClick = { onConfirmation() }) {
+                Text(text = "확인")
+            }
+        },
+        dismissButton = null
+    )
+    
 }
 
