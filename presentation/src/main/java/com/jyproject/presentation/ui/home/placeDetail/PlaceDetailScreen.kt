@@ -2,6 +2,7 @@ package com.jyproject.presentation.ui.home.placeDetail
 
 import android.app.Activity
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Info
@@ -36,11 +39,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -65,12 +72,9 @@ fun PlaceDetailScreen(
     val viewModel: PlaceDetailViewModel = viewModel(
         factory = PlaceDetailViewModel.providePlaceDetailViewModelFactory(factory, place ?: "")
     )
+
     val placeInfo = viewModel.placeInfo.collectAsStateWithLifecycle()
     val placeDBInfo = viewModel.placeDBInfo.collectAsStateWithLifecycle()
-
-    LaunchedEffect(placeInfo.value) {
-
-    }
 
     place?.let {
         Scaffold(
@@ -79,13 +83,44 @@ fun PlaceDetailScreen(
                 DetailTopBar(
                     place = place,
                     placeArea = placeDBInfo.value?.placeArea,
+                    livePeopleInfo = placeInfo.value?.livePeopleInfo,
                     viewModel = viewModel,
                     onClickDeletePlace = onClickDeletePlace,
                     onClickBackBtn = { navController.navigateUp() }
                 )
             }
         ) { innerPadding->
-            Column(modifier = Modifier.padding(innerPadding)) {
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .background(Color.White)
+                    .fillMaxSize()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(CircleShape),
+                        painter = painterResource(id = R.drawable.ic_app),
+                        contentDescription = "icon",
+                        contentScale = ContentScale.Crop
+                    )
+                    Text(
+                        modifier = Modifier
+                            .shadow(elevation = 24.dp, shape = RoundedCornerShape(0.05.dp))
+                            .background(color = Color.White, shape = RoundedCornerShape(8.dp))
+                            .padding(vertical = 2.dp)
+                            .padding(start = 6.dp, end = 8.dp)
+                            .width(250.dp),
+                        text = placeInfo.value?.livePeopleInfoMsg ?: "불러오는 중...",
+                        fontSize = 12.sp
+                    )
+                }
 
             }
         }
@@ -98,6 +133,7 @@ fun PlaceDetailScreen(
 private fun DetailTopBar(
     place: String,
     placeArea: String?,
+    livePeopleInfo: String?,
     viewModel: PlaceDetailViewModel,
     onClickDeletePlace: () -> Unit,
     onClickBackBtn: () -> Unit
@@ -108,6 +144,9 @@ private fun DetailTopBar(
     var parentWidth by remember { mutableIntStateOf(0) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showInfoDialog by remember { mutableStateOf(false) }
+    var stateColor by remember { mutableIntStateOf(R.color.light_gray_middle1) }
+
+    if(!livePeopleInfo.isNullOrBlank()) stateColor = viewModel.getStateColor(livePeopleInfo)
 
     if(showDeleteDialog) {
         DeleteCheckDialog(
@@ -130,8 +169,7 @@ private fun DetailTopBar(
             .fillMaxWidth()
             .height(45.dp)
             .background(Color.White)
-            .onPlaced { parentWidth = it.size.width }
-        ,
+            .onPlaced { parentWidth = it.size.width },
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -141,6 +179,19 @@ private fun DetailTopBar(
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.app_base),
             fontSize = 18.sp,
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+        Text(
+            modifier = Modifier
+                .background(
+                    color = colorResource(id = stateColor),
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .padding(horizontal = 8.dp),
+            text = livePeopleInfo ?: "연결중",
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = 12.sp
         )
     }
 

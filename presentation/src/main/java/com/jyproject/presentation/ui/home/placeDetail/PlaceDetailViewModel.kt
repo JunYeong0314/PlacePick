@@ -9,6 +9,7 @@ import com.jyproject.domain.features.db.usecase.PlaceDeleteUseCase
 import com.jyproject.domain.features.place.usecase.GetPlaceInfoUseCase
 import com.jyproject.domain.models.Place
 import com.jyproject.domain.models.PlaceInfo
+import com.jyproject.presentation.mappers.UiMapper
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -21,7 +22,8 @@ class PlaceDetailViewModel @AssistedInject constructor(
     @Assisted private val place: String,
     private val getPlaceInfoUseCase: GetPlaceInfoUseCase,
     private val placeDeleteUseCase: PlaceDeleteUseCase,
-    private val getPlaceDBInfoUseCase: GetPlaceDBInfoUseCase
+    private val getPlaceDBInfoUseCase: GetPlaceDBInfoUseCase,
+    private val uiMapper: UiMapper
 ): ViewModel() {
     private val _placeInfo = MutableStateFlow<PlaceInfo?>(null)
     val placeInfo = _placeInfo.asStateFlow()
@@ -41,6 +43,10 @@ class PlaceDetailViewModel @AssistedInject constructor(
         viewModelScope.launch {
             placeDeleteUseCase(place)
         }
+    }
+
+    fun getStateColor(liveState: String): Int{
+        return uiMapper.mapperLivePeopleColor(liveState)
     }
 
     private fun getPlaceInfo(place: String){

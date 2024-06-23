@@ -53,7 +53,6 @@ class AddPlaceCheckViewModel @AssistedInject constructor(
 
     suspend fun checkDupPlace(placeName: String): Boolean{
         val result = placeFindUseCase(placeName)
-
         _checkDupPlace.update { result }
         return result
     }
@@ -61,7 +60,9 @@ class AddPlaceCheckViewModel @AssistedInject constructor(
     private suspend fun searchPlaceArea(placeName: String) {
         searchPlaceUseCase(placeName)
             .onFailure { _errorObserve.update { true } }
-            .onSuccess { placeArea = it?.firstOrNull()?.placeArea }
+            .onSuccess {
+                placeArea = it?.firstOrNull()?.placeArea
+            }
     }
 
     @AssistedFactory

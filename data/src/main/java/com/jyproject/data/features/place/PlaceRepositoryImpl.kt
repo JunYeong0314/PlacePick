@@ -1,15 +1,12 @@
 package com.jyproject.data.features.place
 
+import android.util.Log
 import com.jyproject.data.mappers.PlaceDataMapper
 import com.jyproject.data.remote.service.place.GetPlaceInfoService
 import com.jyproject.data.remote.service.place.SearchPlaceService
-import com.jyproject.data.response.place.PlaceInfoData
-import com.jyproject.data.response.place.PredictionInfoData
-import com.jyproject.data.response.search.SearchResponse
 import com.jyproject.domain.features.place.PlaceRepository
 import com.jyproject.domain.models.Place
 import com.jyproject.domain.models.PlaceInfo
-import com.jyproject.domain.models.PredictionInfo
 import javax.inject.Inject
 
 class PlaceRepositoryImpl @Inject constructor(
