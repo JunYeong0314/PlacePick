@@ -22,7 +22,7 @@ compose = "1.9.0"
 compose-navigation = "2.7.7"
 compose-hilt-navigation = "1.2.0"
 compose-material = "1.6.5"
-compose-lifecycle = "2.6.2"
+compose-lifecycle = "2.8.2"
 firebase = "4.4.1"
 firebase-bom = "32.8.0"
 kakao = "2.15.0"
@@ -36,6 +36,7 @@ datastore = "1.0.0"
 roomdb = "2.6.1"
 squareup-retrofit = "2.9.0"
 animation = "1.7.0-beta01"
+vico = "2.0.0-alpha.21"
 
 [libraries]
 androidx-datastore-preferences-v111 = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore-preferences" }
@@ -53,6 +54,13 @@ map-sdk = { module = "com.naver.maps:map-sdk", version.ref = "map-sdk" }
 material = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 flow = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "flow" }
+
+# Vico
+vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
+vico-compose-m2 = { group = "com.patrykandpatrick.vico", name = "compose-m2", version.ref = "vico" }
+vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
+vico-core = { group = "com.patrykandpatrick.vico", name = "core", version.ref = "vico" }
+vico-views = { group = "com.patrykandpatrick.vico", name = "views", version.ref = "vico" }
 
 # Coroutine
 kotlin-coroutines-play = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
