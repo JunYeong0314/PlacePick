@@ -1,11 +1,10 @@
-package com.jyproject.presentation.ui.login
+package com.jyproject.presentation.ui.feature.login
 
 import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,11 +15,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -39,29 +36,36 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jyproject.domain.models.LoginState
 import com.jyproject.domain.models.Platform.KAKAO
 import com.jyproject.domain.models.Platform.NAVER
 import com.jyproject.presentation.R
-import com.jyproject.presentation.anim.LottieAddPlaceCheck
+import kotlinx.coroutines.flow.Flow
 
 @Composable fun LoginScreen(
     context: Context,
-    viewModel: LoginViewModel = hiltViewModel(),
-    isLogin: () -> Unit
+    state: LoginContract.State,
+    effectFlow: Flow<LoginContract.Effect>?,
+    onEventSend: (event: LoginContract.Event) -> Unit,
+    onEffectSend: (effect: LoginContract.Effect.Navigation) -> Unit
 ) {
     var isLoading by remember { mutableStateOf(false) }
-    val loginState by viewModel.loginFlow.collectAsStateWithLifecycle()
     val snackBarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(loginState) {
-        when(loginState){
+    LaunchedEffect(effectFlow) {
+        effectFlow?.collect { effect ->
+            when(effect) {
+                is LoginContract.Effect.Navigation.ToMainScreen -> { onEffectSend(effect) }
+            }
+        }
+    }
+
+    LaunchedEffect(state.loginState) {
+        when(state.loginState){
             LoginState.BLANK -> { isLoading = false }
             LoginState.LOADING -> { isLoading = true }
-            LoginState.EXIST -> { isLogin() }
-            LoginState.INIT -> { viewModel.signUp() }
+            LoginState.EXIST -> { onEventSend(LoginContract.Event.NavigationToMain) }
+            LoginState.INIT -> { onEventSend(LoginContract.Event.SignUp) }
             LoginState.ERROR -> {
                 isLoading = false
                 snackBarHostState.showSnackbar(
@@ -71,6 +75,8 @@ import com.jyproject.presentation.anim.LottieAddPlaceCheck
             }
         }
     }
+
+
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
@@ -94,13 +100,13 @@ import com.jyproject.presentation.anim.LottieAddPlaceCheck
             LoginBox(
                 painterId = R.drawable.ic_login_kakao,
                 platform = KAKAO,
-                onLoginClick = { viewModel.startKakaoLogin() }
+                onLoginClick = { onEventSend(LoginContract.Event.KakaoLogin) }
             )
             Spacer(modifier = Modifier.size(12.dp))
             LoginBox(
                 painterId = R.drawable.ic_login_naver,
                 platform = NAVER,
-                onLoginClick = { viewModel.startNaverLogin(context = context) }
+                onLoginClick = { onEventSend(LoginContract.Event.NaverLogin(context)) }
             )
         }
     }

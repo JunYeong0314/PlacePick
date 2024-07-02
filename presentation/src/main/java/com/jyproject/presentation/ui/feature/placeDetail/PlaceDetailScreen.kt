@@ -1,4 +1,4 @@
-package com.jyproject.presentation.ui.home.placeDetail
+package com.jyproject.presentation.ui.feature.placeDetail
 
 import android.app.Activity
 import android.util.Log

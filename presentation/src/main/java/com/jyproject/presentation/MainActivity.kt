@@ -3,6 +3,7 @@ package com.jyproject.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.jyproject.presentation.navigation.AppNavigation
 import com.jyproject.presentation.ui.theme.CustomTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -13,7 +14,7 @@ class MainActivity: ComponentActivity() {
 
         setContent {
             CustomTheme {
-                PlacePickApp(context = this@MainActivity)
+                AppNavigation(context = this@MainActivity)
             }
         }
     }

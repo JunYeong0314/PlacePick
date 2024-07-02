@@ -1,4 +1,4 @@
-package com.jyproject.presentation.ui.mypage
+package com.jyproject.presentation.ui.feature.mypage
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

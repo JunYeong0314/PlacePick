@@ -1,4 +1,4 @@
-package com.jyproject.presentation.ui.home.placeDetail
+package com.jyproject.presentation.ui.feature.placeDetail
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

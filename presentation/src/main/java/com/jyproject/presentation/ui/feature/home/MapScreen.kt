@@ -1,4 +1,4 @@
-package com.jyproject.presentation.ui.home
+package com.jyproject.presentation.ui.feature.home
 import android.Manifest
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Column
