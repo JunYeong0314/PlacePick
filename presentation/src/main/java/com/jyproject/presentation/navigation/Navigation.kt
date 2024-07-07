@@ -9,6 +9,7 @@ object Navigation {
     object Routes {
         const val LOGIN = "login"
         const val HOME = "home"
+        const val MYPAGE = "mypage"
         const val PLACE_SEARCH = "placeSearch"
         const val PLACE_ADD = "placeAdd"
         const val PLACE_DETAIL = "placeDetail"

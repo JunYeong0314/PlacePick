@@ -1,21 +1,18 @@
 package com.jyproject.presentation.ui.feature.placeDetail
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.jyproject.domain.features.db.usecase.GetPlaceDBInfoUseCase
 import com.jyproject.domain.features.db.usecase.PlaceDeleteUseCase
 import com.jyproject.domain.features.place.usecase.GetPlaceInfoUseCase
-import com.jyproject.domain.models.Place
-import com.jyproject.domain.models.PlaceInfo
+import com.jyproject.domain.models.CommonState
+import com.jyproject.presentation.R
 import com.jyproject.presentation.mappers.UiMapper
+import com.jyproject.presentation.ui.base.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PlaceDetailViewModel @AssistedInject constructor(
@@ -24,40 +21,53 @@ class PlaceDetailViewModel @AssistedInject constructor(
     private val placeDeleteUseCase: PlaceDeleteUseCase,
     private val getPlaceDBInfoUseCase: GetPlaceDBInfoUseCase,
     private val uiMapper: UiMapper
-): ViewModel() {
-    private val _placeInfo = MutableStateFlow<PlaceInfo?>(null)
-    val placeInfo = _placeInfo.asStateFlow()
+): BaseViewModel<PlaceDetailContract.Event, PlaceDetailContract.State, PlaceDetailContract.Effect>() {
+    override fun setInitialState() = PlaceDetailContract.State(
+        placeAreaInfo = null,
+        placeInfo = null,
+        placeInfoState = CommonState.LOADING,
+        stateColor = R.color.light_gray_middle1
+    )
 
-    private val _errorObserver = MutableStateFlow(false)
-    val errorObserver = _errorObserver.asStateFlow()
-
-    private val _placeDBInfo = MutableStateFlow<Place?>(null)
-    val placeDBInfo = _placeDBInfo.asStateFlow()
+    override fun handleEvents(event: PlaceDetailContract.Event) {
+        when(event) {
+            is PlaceDetailContract.Event.Retry -> {}
+            is PlaceDetailContract.Event.DeletePlace -> deletePlace(event.place)
+            is PlaceDetailContract.Event.NavigationToMain ->
+                setEffect { PlaceDetailContract.Effect.Navigation.ToMain }
+            is PlaceDetailContract.Event.NavigationToBack ->
+                setEffect { PlaceDetailContract.Effect.Navigation.ToBack }
+        }
+    }
 
     init {
         getPlaceInfo(place)
         getPlaceDBInfo(place)
     }
 
-    fun deletePlace(place: String){
+    private fun deletePlace(place: String){
         viewModelScope.launch {
             placeDeleteUseCase(place)
         }
     }
 
-    fun getStateColor(liveState: String): Int{
-        return uiMapper.mapperLivePeopleColor(liveState)
-    }
-
     private fun getPlaceInfo(place: String){
+        setState { copy(placeInfoState = CommonState.LOADING) }
         if(place.isNotBlank()){
             viewModelScope.launch {
                 getPlaceInfoUseCase(place)
                     .onFailure {
-                        _errorObserver.update { true }
+                        setState { copy(placeInfoState = CommonState.ERROR) }
                     }
                     .onSuccess { response->
-                        response?.let { _placeInfo.update { response } }
+                        response?.let {
+                            setState {
+                                copy(
+                                    placeInfo = response,
+                                    stateColor = uiMapper.mapperLivePeopleColor(response.livePeopleInfo ?: "")
+                                )
+                            }
+                        }
                     }
             }
         }
@@ -66,7 +76,9 @@ class PlaceDetailViewModel @AssistedInject constructor(
     private fun getPlaceDBInfo(place: String){
         if(place.isNotBlank()){
             viewModelScope.launch {
-                _placeDBInfo.value = getPlaceDBInfoUseCase(place)
+                getPlaceDBInfoUseCase(place).let { place->
+                    setState { copy(placeAreaInfo = place) }
+                }
             }
         }
     }
@@ -88,4 +100,6 @@ class PlaceDetailViewModel @AssistedInject constructor(
             }
         }
     }
+
+
 }

@@ -24,10 +24,10 @@ import com.jyproject.presentation.R
 import com.jyproject.presentation.anim.horizontallyAnimatedComposableArguments
 import com.jyproject.presentation.anim.noAnimatedComposable
 import com.jyproject.presentation.anim.verticallyAnimatedComposable
+import com.jyproject.presentation.anim.verticallyAnimatedComposableArguments
 import com.jyproject.presentation.ui.feature.common.BottomBar
 import com.jyproject.presentation.ui.feature.common.TopBar
-import com.jyproject.presentation.ui.feature.placeSearch.PlaceSearchScreen
-import com.jyproject.presentation.ui.util.Destination
+import com.jyproject.presentation.ui.feature.mypage.MyPageScreen
 
 @Composable
 fun AppNavigation(
@@ -85,7 +85,21 @@ fun AppNavigation(
                 PlaceAddScreenDestination(place = place, navController = navController)
             }
 
+            verticallyAnimatedComposableArguments(
+                route = "${Navigation.Routes.PLACE_DETAIL}/{${Navigation.Args.PLACE_DETAIL_NAME}}",
+                arguments = listOf(navArgument(Navigation.Args.PLACE_DETAIL_NAME){
+                    type = NavType.StringType }
+                ),
+            ){ navBackStackEntry ->
+                val place =
+                    requireNotNull(navBackStackEntry.arguments?.getString(Navigation.Args.PLACE_DETAIL_NAME)) {
+                        "Require place"
+                    }
 
+                PlaceDetailScreenDestination(place = place, navController = navController)
+            }
+
+            noAnimatedComposable(Navigation.Routes.MYPAGE) { MyPageScreen(navController = navController) }
         }
     }
 

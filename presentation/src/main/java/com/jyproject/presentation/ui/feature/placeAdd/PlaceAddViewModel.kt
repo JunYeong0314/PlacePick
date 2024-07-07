@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.jyproject.domain.features.db.usecase.PlaceAddUseCase
 import com.jyproject.domain.features.db.usecase.PlaceFindUseCase
 import com.jyproject.domain.features.place.usecase.SearchPlaceUseCase
+import com.jyproject.domain.models.PlaceAddState
 import com.jyproject.presentation.ui.base.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -29,9 +30,7 @@ class PlaceAddViewModel @AssistedInject constructor(
     }
 
     override fun setInitialState() = PlaceAddContract.State(
-        isDuplicate = false,
-        isError = false,
-        isAddPlace = false
+        placeAddState = PlaceAddState.LOADING
     )
 
     override fun handleEvents(event: PlaceAddContract.Event) {
@@ -47,13 +46,14 @@ class PlaceAddViewModel @AssistedInject constructor(
     private var placeArea: String? = null
 
     private fun addPlace(place: String){
+        setState { copy(placeAddState = PlaceAddState.LOADING) }
         placeArea?.let { placeArea->
             viewModelScope.launch {
                 if(!checkDupPlace(place)) {
                     placeAddUseCase(place, placeArea)
-                    setState { copy(isAddPlace = true) }
+                    setState { copy(placeAddState = PlaceAddState.SUCCESS) }
                 }else{
-                    setState { copy(isDuplicate = true) }
+                    setState { copy(placeAddState = PlaceAddState.DUPLICATE) }
                 }
             }
         }
@@ -64,8 +64,9 @@ class PlaceAddViewModel @AssistedInject constructor(
     }
 
     private suspend fun searchPlaceArea(placeName: String) {
+        setState { copy(placeAddState = PlaceAddState.LOADING) }
         searchPlaceUseCase(placeName)
-            .onFailure { setState { copy(isError = true) } }
+            .onFailure { setState { copy(placeAddState = PlaceAddState.ERROR) } }
             .onSuccess {
                 placeArea = it?.firstOrNull()?.placeArea
             }
