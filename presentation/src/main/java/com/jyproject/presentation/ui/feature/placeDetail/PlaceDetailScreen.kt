@@ -1,5 +1,6 @@
 package com.jyproject.presentation.ui.feature.placeDetail
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jyproject.presentation.R
+import com.jyproject.presentation.ui.feature.placeDetail.composable.AgeChart
+import com.jyproject.presentation.ui.feature.placeDetail.composable.PlaceInfo
 import com.jyproject.presentation.ui.feature.placeDetail.composable.TopBar
 import kotlinx.coroutines.flow.Flow
 
@@ -64,32 +67,8 @@ fun PlaceDetailScreen(
                     .background(Color.White)
                     .fillMaxSize()
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 6.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Image(
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape),
-                        painter = painterResource(id = R.drawable.ic_app),
-                        contentDescription = "icon",
-                        contentScale = ContentScale.Crop
-                    )
-                    Text(
-                        modifier = Modifier
-                            .shadow(elevation = 24.dp, shape = RoundedCornerShape(0.05.dp))
-                            .background(color = Color.White, shape = RoundedCornerShape(8.dp))
-                            .padding(vertical = 2.dp)
-                            .padding(start = 6.dp, end = 8.dp)
-                            .width(250.dp),
-                        text = state.placeInfo?.livePeopleInfoMsg ?: "불러오는 중...",
-                        fontSize = 12.sp
-                    )
-                }
-
+                PlaceInfo(state = state)
+                AgeChart()
             }
         }
     }
