@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jyproject.presentation.R
 import com.jyproject.presentation.ui.feature.home.HomeContract
+import com.jyproject.presentation.ui.util.modifierExtensions.singleClick.clickableSingle
 
 @Composable
 fun PlaceCard(
@@ -46,7 +47,7 @@ fun PlaceCard(
                 shape = RoundedCornerShape(4.dp),
                 color = colorResource(id = R.color.app_base)
             )
-            .clickable { onEventSend(HomeContract.Event.NavigationToPlaceDetail(place)) }
+            .clickableSingle { onEventSend(HomeContract.Event.NavigationToPlaceDetail(place)) }
     ){
         Column(
             modifier = Modifier.fillMaxSize(),

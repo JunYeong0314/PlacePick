@@ -20,4 +20,8 @@ dependencies {
 
     // flow
     implementation(libs.flow)
+
+    // test
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
 }

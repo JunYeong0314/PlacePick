@@ -65,10 +65,11 @@ fun PlaceDetailScreen(
                 modifier = Modifier
                     .padding(innerPadding)
                     .background(Color.White)
-                    .fillMaxSize()
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 PlaceInfo(state = state)
-                AgeChart()
+                // AgeChart(state = state)
             }
         }
     }
