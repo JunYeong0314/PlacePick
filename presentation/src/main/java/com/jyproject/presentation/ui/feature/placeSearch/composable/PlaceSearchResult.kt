@@ -1,6 +1,5 @@
 package com.jyproject.presentation.ui.feature.placeSearch.composable
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jyproject.domain.models.Place
 import com.jyproject.presentation.ui.feature.placeSearch.PlaceSearchContract
+import com.jyproject.presentation.ui.util.modifierExtensions.singleClick.clickableSingle
 
 @Composable
 fun PlaceSearchResult(
@@ -31,7 +31,7 @@ fun PlaceSearchResult(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable {
+                        .clickableSingle {
                             onEventSend(
                                 PlaceSearchContract.Event.NavigateToPlaceAdd(
                                     searchResult.place!!

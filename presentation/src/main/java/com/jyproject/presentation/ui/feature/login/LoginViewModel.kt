@@ -22,7 +22,6 @@ class LoginViewModel @Inject constructor(
     private val userDataRepository: UserDataRepository
 ): BaseViewModel<LoginContract.Event, LoginContract.State, LoginContract.Effect>() {
     private var userNumber = "" // 회원가입 하는 경우 사용
-
     override fun setInitialState() = LoginContract.State(
         loginState = LoginState.BLANK
     )
@@ -48,7 +47,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun startNaverLogin(context: Context) {
+    private fun startNaverLogin(context: Context) {
         setState { copy(loginState = LoginState.LOADING) }
         naverLoginUseCase(context = context, updateSocialToken = {}) { userNum->
             userNum?.let {

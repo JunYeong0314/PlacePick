@@ -65,6 +65,11 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":presentation"))
 
+    // test
+    implementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
     // hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

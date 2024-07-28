@@ -29,10 +29,9 @@ class PlaceDataMapper @Inject constructor() {
 
     private fun mapperToAgeRate(placeInfoData: PlaceInfoData?): List<Float?> {
         return listOf(
-            placeInfoData?.rate0?.toFloat(), placeInfoData?.rate10?.toFloat(),
-            placeInfoData?.rate20?.toFloat(), placeInfoData?.rate30?.toFloat(),
-            placeInfoData?.rate40?.toFloat(), placeInfoData?.rate50?.toFloat(),
-            placeInfoData?.rate60?.toFloat()
+            placeInfoData?.rate10?.toFloat(), placeInfoData?.rate20?.toFloat(),
+            placeInfoData?.rate30?.toFloat(), placeInfoData?.rate40?.toFloat(),
+            placeInfoData?.rate50?.toFloat(), placeInfoData?.rate60?.toFloat()
         )
     }
 

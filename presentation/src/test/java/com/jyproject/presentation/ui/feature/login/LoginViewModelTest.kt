@@ -55,7 +55,7 @@ class LoginViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `startKakaoLogin state 업데이트와 use case 호출`() = runTest {
+    fun `startKakaoLogin는 UseCase, checkMember, setUserData 호출해야함`() = runTest {
         // Given
         val userNum = "123"
         coEvery { kakaoLoginUseCase(any(), any()) } answers {

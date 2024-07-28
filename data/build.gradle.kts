@@ -1,6 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import org.gradle.configurationcache.extensions.capitalized
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.Properties
 
 plugins {
@@ -9,6 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     alias(libs.plugins.com.google.dagger.hilt.android)
     id("androidx.room")
+    id("kotlin-kapt")
 }
 
 // local.properties 파일에 추가한 값 사용
