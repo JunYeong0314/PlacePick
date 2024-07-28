@@ -62,7 +62,10 @@ import kotlinx.coroutines.flow.Flow
 
     LaunchedEffect(state.loginState) {
         when(state.loginState){
-            LoginState.BLANK -> { isLoading = false }
+            LoginState.BLANK -> {
+
+                isLoading = false
+            }
             LoginState.LOADING -> { isLoading = true }
             LoginState.EXIST -> { onEventSend(LoginContract.Event.NavigationToMain) }
             LoginState.INIT -> { onEventSend(LoginContract.Event.SignUp) }

@@ -5,6 +5,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     alias(libs.plugins.com.google.dagger.hilt.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 // local.properties 파일에 추가한 값 사용
@@ -66,23 +67,23 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
-    implementation(libs.androidx.ui.test.junit4.android)
-    testImplementation(libs.junit)
+
+    // test
+    implementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.test.manifest)
     androidTestImplementation(libs.espresso.core)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     // compose
-    implementation(libs.androidx.animation)
-    implementation(libs.lifecycle)
-    implementation(libs.compose)
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.6.4")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.6.4")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation(libs.compose.navigation)
-    implementation(libs.compose.material)
     implementation(libs.compose.lifecycle)
 
     // coroutine
@@ -116,8 +117,4 @@ dependencies {
     implementation(libs.vico.compose.m3)
     implementation(libs.vico.core)
     implementation(libs.vico.views)
-
-    // Espresso dependencies
-    androidTestImplementation(libs.androidx.espresso.core.v340)
-    androidTestImplementation(libs.androidx.junit.v113)
 }

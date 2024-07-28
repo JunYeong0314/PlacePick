@@ -23,9 +23,6 @@ class LoginViewModel @Inject constructor(
 ): BaseViewModel<LoginContract.Event, LoginContract.State, LoginContract.Effect>() {
     private var userNumber = "" // 회원가입 하는 경우 사용
 
-    init {
-        initSetting()
-    }
     override fun setInitialState() = LoginContract.State(
         loginState = LoginState.BLANK
     )
@@ -40,7 +37,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun startKakaoLogin() {
+    fun startKakaoLogin() {
         setState { copy(loginState = LoginState.LOADING) }
         kakaoLoginUseCase(updateSocialToken = {}) { userNum ->
             userNum?.let {
@@ -51,7 +48,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun startNaverLogin(context: Context) {
+    fun startNaverLogin(context: Context) {
         setState { copy(loginState = LoginState.LOADING) }
         naverLoginUseCase(context = context, updateSocialToken = {}) { userNum->
             userNum?.let {
@@ -73,7 +70,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun initSetting(){
+    fun initSetting(){
         viewModelScope.launch {
             if(userDataRepository.getUserData().userNum.isNotBlank()){
                 setState { copy(loginState = LoginState.LOADING) }
