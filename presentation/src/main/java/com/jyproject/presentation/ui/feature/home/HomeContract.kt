@@ -9,6 +9,7 @@ class HomeContract {
     sealed class Event: ViewEvent {
         data class NavigationToPlaceDetail(val place: String): Event()
         data object NavigationToPlaceSearch: Event()
+        data class DeletePlace(val place: String): Event()
     }
 
     data class State(

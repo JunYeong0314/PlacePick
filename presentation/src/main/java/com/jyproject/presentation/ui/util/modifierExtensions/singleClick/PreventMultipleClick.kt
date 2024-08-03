@@ -1,6 +1,6 @@
 package com.jyproject.presentation.ui.util.modifierExtensions.singleClick
 
-import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.Composable
@@ -15,6 +15,7 @@ fun Modifier.clickableSingle(
     enabled: Boolean = true,
     onClickLabel: String? = null,
     role: Role? = null,
+    indication: Indication? = null,
     onClick: () -> Unit
 ) = composed(
     inspectorInfo = debugInspectorInfo {
@@ -22,16 +23,19 @@ fun Modifier.clickableSingle(
         properties["enabled"] = enabled
         properties["onClickLabel"] = onClickLabel
         properties["role"] = role
+        properties["indication"] = indication
         properties["onClick"] = onClick
     }
 ) {
     val multipleEventsCutter = remember { MultipleEventsCutter.get() }
-    Modifier.clickable(
-        enabled = enabled,
-        onClickLabel = onClickLabel,
-        onClick = { multipleEventsCutter.processEvent { onClick() } },
-        role = role,
-        indication = LocalIndication.current,
-        interactionSource = remember { MutableInteractionSource() }
+    return@composed this.then(
+        Modifier.clickable(
+            enabled = enabled,
+            onClickLabel = onClickLabel,
+            onClick = { multipleEventsCutter.processEvent { onClick() } },
+            role = role,
+            indication = indication,
+            interactionSource = remember { MutableInteractionSource() }
+        )
     )
 }

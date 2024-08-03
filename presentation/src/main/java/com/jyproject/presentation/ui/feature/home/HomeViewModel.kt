@@ -1,23 +1,17 @@
 package com.jyproject.presentation.ui.feature.home
 
-import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jyproject.domain.features.db.repository.PlaceDataRepository
+import com.jyproject.domain.features.db.usecase.PlaceDeleteUseCase
 import com.jyproject.domain.features.db.usecase.PlaceReadUseCase
-import com.jyproject.domain.models.Place
 import com.jyproject.presentation.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val placeReadUseCase: PlaceReadUseCase
+    private val placeReadUseCase: PlaceReadUseCase,
+    private val placeDeleteUseCase: PlaceDeleteUseCase
 ): BaseViewModel<HomeContract.Event, HomeContract.State, HomeContract.Effect>() {
     init {
         getPlaceData()
@@ -36,6 +30,7 @@ class HomeViewModel @Inject constructor(
                 )
             }
             is HomeContract.Event.NavigationToPlaceSearch -> setEffect { HomeContract.Effect.Navigation.ToPlaceSearch }
+            is HomeContract.Event.DeletePlace -> deletePlace(event.place)
         }
     }
 
@@ -44,6 +39,12 @@ class HomeViewModel @Inject constructor(
             placeReadUseCase().collect{ place->
                 setState { copy(placeList = place, isLoading = false) }
             }
+        }
+    }
+
+    private fun deletePlace(place: String){
+        viewModelScope.launch {
+            placeDeleteUseCase(place)
         }
     }
 
