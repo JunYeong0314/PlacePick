@@ -21,7 +21,7 @@ class LoginViewModel @Inject constructor(
     private val checkMemberUseCase: CheckMemberUseCase,
     private val userDataRepository: UserDataRepository
 ): BaseViewModel<LoginContract.Event, LoginContract.State, LoginContract.Effect>() {
-    private var userNumber = "" // 회원가입 하는 경우 사용
+    var userNumber = "" // 회원가입 하는 경우 사용
     override fun setInitialState() = LoginContract.State(
         loginState = LoginState.BLANK
     )
@@ -58,7 +58,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun signUp() {
+    fun signUp() {
         viewModelScope.launch {
             signUpUseCase(userNumber)
                 .onFailure { setState { copy(loginState = LoginState.ERROR) } }
@@ -78,7 +78,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun isMember(userNum: String){
+    fun isMember(userNum: String){
         viewModelScope.launch {
             checkMemberUseCase(userNum)
                 .onFailure { setState { copy(loginState = LoginState.ERROR) } }
