@@ -1,7 +1,6 @@
 package com.jyproject.presentation.ui.feature.login
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +35,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.jyproject.domain.models.LoginState
 import com.jyproject.domain.models.Platform.KAKAO
 import com.jyproject.domain.models.Platform.NAVER
 import com.jyproject.presentation.R

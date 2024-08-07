@@ -1,6 +1,5 @@
 package com.jyproject.presentation.ui.feature.placeAdd
 
-import com.jyproject.domain.models.PlaceAddState
 import com.jyproject.presentation.ui.base.ViewEvent
 import com.jyproject.presentation.ui.base.ViewSideEffect
 import com.jyproject.presentation.ui.base.ViewState

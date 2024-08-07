@@ -7,7 +7,6 @@ import com.jyproject.domain.features.auth.usecase.SignUpUseCase
 import com.jyproject.domain.features.db.repository.UserDataRepository
 import com.jyproject.domain.features.login.usecase.KakaoLoginUseCase
 import com.jyproject.domain.features.login.usecase.NaverLoginUseCase
-import com.jyproject.domain.models.LoginState
 import com.jyproject.presentation.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

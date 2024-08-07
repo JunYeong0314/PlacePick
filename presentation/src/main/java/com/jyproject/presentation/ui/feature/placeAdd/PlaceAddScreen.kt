@@ -19,7 +19,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.jyproject.domain.models.PlaceAddState
 import com.jyproject.presentation.anim.LottieAddPlaceCheck
 import com.jyproject.presentation.ui.feature.placeAdd.composable.CheckButtonBox
 import com.jyproject.presentation.ui.feature.placeAdd.composable.PlaceAddTitle

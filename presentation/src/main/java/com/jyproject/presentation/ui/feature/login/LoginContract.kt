@@ -1,7 +1,6 @@
 package com.jyproject.presentation.ui.feature.login
 
 import android.content.Context
-import com.jyproject.domain.models.LoginState
 import com.jyproject.presentation.ui.base.ViewEvent
 import com.jyproject.presentation.ui.base.ViewSideEffect
 import com.jyproject.presentation.ui.base.ViewState

@@ -1,28 +1,26 @@
 package com.jyproject.presentation.navigation
 
-import android.app.Activity
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.jyproject.presentation.di.ViewModelFactoryProvider
 import com.jyproject.presentation.ui.feature.placeDetail.PlaceDetailContract
 import com.jyproject.presentation.ui.feature.placeDetail.PlaceDetailScreen
 import com.jyproject.presentation.ui.feature.placeDetail.PlaceDetailViewModel
-import dagger.hilt.android.EntryPointAccessors
+import com.jyproject.presentation.ui.feature.placeDetail.PlaceInfoState
 
 @Composable
 fun PlaceDetailScreenDestination(
     place: String,
-    navController: NavController
+    navController: NavController,
+    viewModel: PlaceDetailViewModel = hiltViewModel()
 ) {
-    val factory = EntryPointAccessors.fromActivity(
-        LocalContext.current as Activity,
-        ViewModelFactoryProvider::class.java
-    ).placeDetailViewModelFactory()
-    val viewModel: PlaceDetailViewModel = viewModel(
-        factory = PlaceDetailViewModel.providePlaceDetailViewModelFactory(factory, place ?: "")
-    )
+    LaunchedEffect(viewModel.viewState.value.placeInfoState) {
+        if(viewModel.viewState.value.placeInfoState == PlaceInfoState.INIT) {
+            viewModel.getPlaceDBInfo(place)
+            viewModel.getPlaceInfo(place)
+        }
+    }
 
     PlaceDetailScreen(
         place = place,

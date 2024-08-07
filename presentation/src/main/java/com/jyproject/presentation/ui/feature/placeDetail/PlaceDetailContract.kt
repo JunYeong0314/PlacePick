@@ -1,6 +1,5 @@
 package com.jyproject.presentation.ui.feature.placeDetail
 
-import com.jyproject.domain.models.CommonState
 import com.jyproject.domain.models.Place
 import com.jyproject.domain.models.PlaceInfo
 import com.jyproject.presentation.ui.base.ViewEvent
@@ -18,8 +17,10 @@ class PlaceDetailContract {
     data class State(
         val placeInfo: PlaceInfo?,
         val placeAreaInfo: Place?,
-        val placeInfoState: CommonState,
-        val stateColor: Int
+        val placeInfoState: PlaceInfoState,
+        val placeStateInfo: String,
+        val placeStateColor: Int,
+        val placeStateInfoMsg: String
     ): ViewState
 
     sealed class Effect: ViewSideEffect {

@@ -2,7 +2,6 @@ package com.jyproject.data.features.login
 
 import android.content.Context
 import com.jyproject.domain.features.login.repository.KakaoLoginRepository
-import com.jyproject.domain.models.KakaoLoginState
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -57,4 +56,8 @@ class KakaoLoginRepositoryImpl @Inject constructor(
             userNum(user?.id.toString())
         }
     }
+}
+
+enum class KakaoLoginState {
+    APP, WEB
 }

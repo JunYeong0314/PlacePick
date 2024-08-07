@@ -8,6 +8,7 @@
     <color name="light_gray_hard2">#767575</color>
     <color name="light_gray_middle1">#C9C9C9</color>
     <color name="light_gray_weak1">#F4F3F3</color>
+    <color name="error_red">#A40019</color>
     
     <!--login-->
     <color name="kakao_login">#FFE812</color>

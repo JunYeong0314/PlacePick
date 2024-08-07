@@ -1,11 +1,13 @@
 package com.jyproject.data.di
 
 import com.jyproject.data.features.auth.AuthRepositoryImpl
+import com.jyproject.data.features.cycle.CycleRepositoryImpl
 import com.jyproject.data.features.db.PlaceDataRepositoryImpl
 import com.jyproject.data.features.login.KakaoLoginRepositoryImpl
 import com.jyproject.data.features.login.NaverLoginRepositoryImpl
 import com.jyproject.data.features.place.PlaceRepositoryImpl
 import com.jyproject.domain.features.auth.repository.AuthRepository
+import com.jyproject.domain.features.cycle.CycleRepository
 import com.jyproject.domain.features.db.repository.PlaceDataRepository
 import com.jyproject.domain.features.login.repository.KakaoLoginRepository
 import com.jyproject.domain.features.login.repository.NaverLoginRepository
@@ -37,4 +39,8 @@ abstract class DataModule {
     // Place RoomDB
     @Binds
     abstract fun bindPlaceDataRepository(placeDataRepositoryImpl: PlaceDataRepositoryImpl): PlaceDataRepository
+
+    // Cycle
+    @Binds
+    abstract fun bindCycleRepository(cycleRepositoryImpl: CycleRepositoryImpl): CycleRepository
 }

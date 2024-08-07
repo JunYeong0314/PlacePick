@@ -6,15 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.jyproject.domain.features.db.usecase.PlaceAddUseCase
 import com.jyproject.domain.features.db.usecase.PlaceFindUseCase
 import com.jyproject.domain.features.place.usecase.SearchPlaceUseCase
-import com.jyproject.domain.models.PlaceAddState
 import com.jyproject.presentation.ui.base.BaseViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PlaceAddViewModel @AssistedInject constructor(

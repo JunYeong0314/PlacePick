@@ -19,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -37,8 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jyproject.presentation.R
 import com.jyproject.presentation.ui.feature.placeDetail.PlaceDetailContract
-import com.jyproject.presentation.ui.feature.placeDetail.PlaceDetailViewModel
-import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun TopBar(
@@ -89,11 +86,11 @@ fun TopBar(
         Text(
             modifier = Modifier
                 .background(
-                    color = colorResource(id = state.stateColor),
+                    color = colorResource(id = state.placeStateColor),
                     shape = RoundedCornerShape(8.dp)
                 )
                 .padding(horizontal = 8.dp),
-            text = state.placeInfo?.livePeopleInfo ?: "연결중",
+            text = state.placeStateInfo,
             color = Color.White,
             fontWeight = FontWeight.Bold,
             fontSize = 12.sp

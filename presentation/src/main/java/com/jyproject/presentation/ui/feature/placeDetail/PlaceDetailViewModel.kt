@@ -1,22 +1,18 @@
 package com.jyproject.presentation.ui.feature.placeDetail
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.jyproject.domain.features.db.usecase.GetPlaceDBInfoUseCase
 import com.jyproject.domain.features.db.usecase.PlaceDeleteUseCase
 import com.jyproject.domain.features.place.usecase.GetPlaceInfoUseCase
-import com.jyproject.domain.models.CommonState
 import com.jyproject.presentation.R
 import com.jyproject.presentation.mappers.UiMapper
 import com.jyproject.presentation.ui.base.BaseViewModel
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PlaceDetailViewModel @AssistedInject constructor(
-    @Assisted private val place: String,
+@HiltViewModel
+class PlaceDetailViewModel @Inject constructor(
     private val getPlaceInfoUseCase: GetPlaceInfoUseCase,
     private val placeDeleteUseCase: PlaceDeleteUseCase,
     private val getPlaceDBInfoUseCase: GetPlaceDBInfoUseCase,
@@ -25,8 +21,10 @@ class PlaceDetailViewModel @AssistedInject constructor(
     override fun setInitialState() = PlaceDetailContract.State(
         placeAreaInfo = null,
         placeInfo = null,
-        placeInfoState = CommonState.LOADING,
-        stateColor = R.color.light_gray_middle1
+        placeInfoState = PlaceInfoState.INIT,
+        placeStateInfo = "",
+        placeStateColor = R.color.light_gray_middle1,
+        placeStateInfoMsg = ""
     )
 
     override fun handleEvents(event: PlaceDetailContract.Event) {
@@ -40,31 +38,36 @@ class PlaceDetailViewModel @AssistedInject constructor(
         }
     }
 
-    init {
-        getPlaceInfo(place)
-        getPlaceDBInfo(place)
-    }
-
     private fun deletePlace(place: String){
         viewModelScope.launch {
             placeDeleteUseCase(place)
         }
     }
 
-    private fun getPlaceInfo(place: String){
-        setState { copy(placeInfoState = CommonState.LOADING) }
+    fun getPlaceInfo(place: String){
+        setState { copy(placeInfoState = PlaceInfoState.LOADING, placeStateInfo = "연결중", placeStateInfoMsg = "불러오는 중..") }
         if(place.isNotBlank()){
             viewModelScope.launch {
                 getPlaceInfoUseCase(place)
                     .onFailure {
-                        setState { copy(placeInfoState = CommonState.ERROR) }
+                        setState {
+                            copy(
+                                placeInfoState = PlaceInfoState.ERROR,
+                                placeStateInfo = "에러",
+                                placeStateInfoMsg = "[Error] 데이터를 불러올 수 없습니다.",
+                                placeStateColor = R.color.error_red
+                            )
+                        }
                     }
                     .onSuccess { response->
                         response?.let {
                             setState {
                                 copy(
                                     placeInfo = response,
-                                    stateColor = uiMapper.mapperLivePeopleColor(response.livePeopleInfo ?: "")
+                                    placeStateInfo = response.livePeopleInfo ?: "",
+                                    placeStateColor = uiMapper.mapperLivePeopleColor(response.livePeopleInfo ?: ""),
+                                    placeInfoState = PlaceInfoState.SUCCESS,
+                                    placeStateInfoMsg = response.livePeopleInfoMsg ?: ""
                                 )
                             }
                         }
@@ -73,7 +76,7 @@ class PlaceDetailViewModel @AssistedInject constructor(
         }
     }
 
-    private fun getPlaceDBInfo(place: String){
+    fun getPlaceDBInfo(place: String){
         if(place.isNotBlank()){
             viewModelScope.launch {
                 getPlaceDBInfoUseCase(place).let { place->
@@ -82,24 +85,4 @@ class PlaceDetailViewModel @AssistedInject constructor(
             }
         }
     }
-
-    @AssistedFactory
-    interface PlaceDetailViewModelFactory {
-        fun create(place: String): PlaceDetailViewModel
-    }
-
-    companion object{
-        fun providePlaceDetailViewModelFactory(
-            factory: PlaceDetailViewModelFactory,
-            place: String
-        ): ViewModelProvider.Factory{
-            return object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return factory.create(place) as T
-                }
-            }
-        }
-    }
-
-
 }

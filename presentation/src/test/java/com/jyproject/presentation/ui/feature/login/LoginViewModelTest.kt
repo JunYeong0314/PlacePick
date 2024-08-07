@@ -5,7 +5,6 @@ import com.jyproject.domain.features.auth.usecase.SignUpUseCase
 import com.jyproject.domain.features.db.repository.UserDataRepository
 import com.jyproject.domain.features.login.usecase.KakaoLoginUseCase
 import com.jyproject.domain.features.login.usecase.NaverLoginUseCase
-import com.jyproject.domain.models.LoginState
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify

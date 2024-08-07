@@ -9,4 +9,8 @@
     <!-- App Message -->
     <string name="message_login_error">[Error] 로그인을 할 수 없습니다.</string>
     <string name="message_placeList_error">[Error] 데이터를 불러올 수 없습니다.</string>
+
+
+    <!-- Place Detail Message -->
+    <string name="detail_message_error">[Error] 데이터를 불러올 수 없습니다.</string>
 </resources>

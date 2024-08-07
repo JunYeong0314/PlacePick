@@ -1,9 +1,9 @@
 package com.jyproject.data.di
 
 import com.jyproject.data.AppInterceptor
-import com.jyproject.data.BuildConfig
 import com.jyproject.data.remote.service.auth.CheckService
 import com.jyproject.data.remote.service.auth.SignUpService
+import com.jyproject.data.remote.service.cycle.GetCycleInfoService
 import com.jyproject.data.remote.service.place.GetPlaceInfoService
 import com.jyproject.data.remote.service.place.SearchPlaceService
 import com.squareup.moshi.Moshi
@@ -119,5 +119,9 @@ class ApiModule {
         return retrofit.create(GetPlaceInfoService::class.java)
     }
 
-
+    @Singleton
+    @Provides
+    fun provideCycleInfo(@BaseRetrofit retrofit: Retrofit): GetCycleInfoService {
+        return retrofit.create(GetCycleInfoService::class.java)
+    }
 }
