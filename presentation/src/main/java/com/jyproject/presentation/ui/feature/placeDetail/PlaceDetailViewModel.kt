@@ -1,6 +1,7 @@
 package com.jyproject.presentation.ui.feature.placeDetail
 
 import androidx.lifecycle.viewModelScope
+import com.jyproject.domain.features.cycle.GetCycleInfoUseCase
 import com.jyproject.domain.features.db.usecase.GetPlaceDBInfoUseCase
 import com.jyproject.domain.features.db.usecase.PlaceDeleteUseCase
 import com.jyproject.domain.features.place.usecase.GetPlaceInfoUseCase
@@ -16,6 +17,7 @@ class PlaceDetailViewModel @Inject constructor(
     private val getPlaceInfoUseCase: GetPlaceInfoUseCase,
     private val placeDeleteUseCase: PlaceDeleteUseCase,
     private val getPlaceDBInfoUseCase: GetPlaceDBInfoUseCase,
+    private val getCycleInfoUseCase: GetCycleInfoUseCase,
     private val uiMapper: UiMapper
 ): BaseViewModel<PlaceDetailContract.Event, PlaceDetailContract.State, PlaceDetailContract.Effect>() {
     override fun setInitialState() = PlaceDetailContract.State(
