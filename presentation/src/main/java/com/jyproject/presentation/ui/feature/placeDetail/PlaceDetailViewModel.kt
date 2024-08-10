@@ -51,15 +51,22 @@ class PlaceDetailViewModel @Inject constructor(
         if(place.isNotBlank()){
             viewModelScope.launch {
                 getPlaceInfoUseCase(place)
-                    .onFailure {
+                    .onFailure { exception->
+                        val errorMsg = when(exception) {
+                            is java.net.UnknownHostException -> "네트워크 연결을 확인하세요."
+                            is java.net.SocketTimeoutException -> "요청시간 초과"
+                            else -> "[Error] 데이터를 불러올 수 없습니다."
+                        }
+
                         setState {
                             copy(
                                 placeInfoState = PlaceInfoState.ERROR,
                                 placeStateInfo = "에러",
-                                placeStateInfoMsg = "[Error] 데이터를 불러올 수 없습니다.",
+                                placeStateInfoMsg = errorMsg,
                                 placeStateColor = R.color.error_red
                             )
                         }
+
                     }
                     .onSuccess { response->
                         response?.let {

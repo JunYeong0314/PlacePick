@@ -1,31 +1,23 @@
 package com.jyproject.presentation.ui.feature.placeAdd
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.jyproject.domain.features.db.usecase.PlaceAddUseCase
 import com.jyproject.domain.features.db.usecase.PlaceFindUseCase
 import com.jyproject.domain.features.place.usecase.SearchPlaceUseCase
 import com.jyproject.presentation.ui.base.BaseViewModel
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PlaceAddViewModel @AssistedInject constructor(
-    @Assisted private val place: String,
+@HiltViewModel
+class PlaceAddViewModel @Inject constructor(
     private val placeAddUseCase: PlaceAddUseCase,
     private val placeFindUseCase: PlaceFindUseCase,
     private val searchPlaceUseCase: SearchPlaceUseCase
 ): BaseViewModel<PlaceAddContract.Event, PlaceAddContract.State, PlaceAddContract.Effect>() {
-    init {
-        viewModelScope.launch {
-            searchPlaceArea(place)
-        }
-    }
 
     override fun setInitialState() = PlaceAddContract.State(
-        placeAddState = PlaceAddState.LOADING
+        placeAddState = PlaceAddState.INIT
     )
 
     override fun handleEvents(event: PlaceAddContract.Event) {
@@ -41,10 +33,10 @@ class PlaceAddViewModel @AssistedInject constructor(
     private var placeArea: String? = null
 
     private fun addPlace(place: String){
-        setState { copy(placeAddState = PlaceAddState.LOADING) }
+        setState { copy(placeAddState = PlaceAddState.INIT) }
         placeArea?.let { placeArea->
             viewModelScope.launch {
-                if(!checkDupPlace(place)) {
+                if(!placeFindUseCase(place)){
                     placeAddUseCase(place, placeArea)
                     setState { copy(placeAddState = PlaceAddState.SUCCESS) }
                 }else{
@@ -54,36 +46,13 @@ class PlaceAddViewModel @AssistedInject constructor(
         }
     }
 
-    private suspend fun checkDupPlace(place: String): Boolean{
-        return placeFindUseCase(place)
-    }
-
-    private suspend fun searchPlaceArea(placeName: String) {
-        setState { copy(placeAddState = PlaceAddState.LOADING) }
-        searchPlaceUseCase(placeName)
-            .onFailure { setState { copy(placeAddState = PlaceAddState.ERROR) } }
-            .onSuccess {
-                placeArea = it?.firstOrNull()?.placeArea
-            }
-    }
-
-    @AssistedFactory
-    interface PlaceAddViewModelFactory {
-        fun create(place: String): PlaceAddViewModel
-    }
-
-    companion object {
-        fun providePlaceAddViewModelFactory(
-            factory: PlaceAddViewModelFactory,
-            place: String
-        ): ViewModelProvider.Factory{
-            return object : ViewModelProvider.Factory {
-                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return factory.create(place) as T
+    fun searchPlaceArea(placeName: String) {
+        viewModelScope.launch {
+            searchPlaceUseCase(placeName)
+                .onFailure { setState { copy(placeAddState = PlaceAddState.ERROR) } }
+                .onSuccess {
+                    placeArea = it?.firstOrNull()?.placeArea
                 }
-            }
         }
     }
-
-
 }

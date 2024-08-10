@@ -1,6 +1,5 @@
 package com.jyproject.data.features.place
 
-import android.util.Log
 import com.jyproject.data.mappers.PlaceDataMapper
 import com.jyproject.data.remote.service.place.GetPlaceInfoService
 import com.jyproject.data.remote.service.place.SearchPlaceService

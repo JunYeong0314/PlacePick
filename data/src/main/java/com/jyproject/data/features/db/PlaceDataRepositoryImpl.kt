@@ -1,6 +1,5 @@
 package com.jyproject.data.features.db
 
-import android.util.Log
 import com.jyproject.data.db.PlaceDAO
 import com.jyproject.data.db.entitiy.PlaceEntity
 import com.jyproject.data.mappers.RoomDataMapper

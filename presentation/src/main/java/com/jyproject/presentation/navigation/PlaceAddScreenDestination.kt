@@ -1,32 +1,25 @@
 package com.jyproject.presentation.navigation
 
-import android.app.Activity
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.jyproject.presentation.di.ViewModelFactoryProvider
 import com.jyproject.presentation.ui.feature.placeAdd.PlaceAddContract
 import com.jyproject.presentation.ui.feature.placeAdd.PlaceAddScreen
+import com.jyproject.presentation.ui.feature.placeAdd.PlaceAddState
 import com.jyproject.presentation.ui.feature.placeAdd.PlaceAddViewModel
-import dagger.hilt.android.EntryPointAccessors
 
 @Composable
 fun PlaceAddScreenDestination(
     place: String,
-    navController: NavController
+    navController: NavController,
+    viewModel: PlaceAddViewModel = hiltViewModel()
 ) {
-    val factory = EntryPointAccessors.fromActivity(
-        LocalContext.current as Activity,
-        ViewModelFactoryProvider::class.java
-    ).placeAddViewModelFactory()
-
-    val viewModel: PlaceAddViewModel = viewModel(
-        factory = PlaceAddViewModel.providePlaceAddViewModelFactory(
-            factory,
-            place
-        )
-    )
+    LaunchedEffect(viewModel.viewState.value.placeAddState) {
+        if(viewModel.viewState.value.placeAddState == PlaceAddState.INIT){
+            viewModel.searchPlaceArea(placeName = place)
+        }
+    }
 
     PlaceAddScreen(
         place = place,

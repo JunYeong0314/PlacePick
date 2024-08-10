@@ -47,7 +47,7 @@ fun PlaceAddScreen(
 
     LaunchedEffect(state) {
         when(state.placeAddState) {
-            PlaceAddState.LOADING -> {}
+            PlaceAddState.INIT -> {}
             PlaceAddState.SUCCESS -> onEventSend(PlaceAddContract.Event.NavigateToHome)
             PlaceAddState.DUPLICATE ->
                 snackBarHostState.showSnackbar(

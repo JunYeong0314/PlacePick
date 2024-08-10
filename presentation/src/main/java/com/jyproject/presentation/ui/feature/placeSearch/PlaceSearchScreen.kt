@@ -15,10 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,6 +29,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.jyproject.presentation.R
 import com.jyproject.presentation.ui.feature.placeSearch.composable.PlaceListEmpty
+import com.jyproject.presentation.ui.feature.placeSearch.composable.PlaceListError
 import com.jyproject.presentation.ui.feature.placeSearch.composable.PlaceSearchBox
 import com.jyproject.presentation.ui.feature.placeSearch.composable.PlaceSearchResult
 import kotlinx.coroutines.flow.Flow
@@ -46,17 +43,7 @@ fun PlaceSearchScreen(
 ){
     val focusManager = LocalFocusManager.current
     var searchText by remember { mutableStateOf("") }
-    val snackBarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(state.isError) {
-        if(state.isError) {
-            snackBarHostState.showSnackbar(
-                message = "장소를 검색할 수 없습니다.",
-                duration = SnackbarDuration.Short
-            )
-        }
-    }
-
+    
     LaunchedEffect(searchText) {
         if(searchText.isNotBlank()) onEventSend(PlaceSearchContract.Event.OnPlaceSearchText(searchText))
     }
@@ -72,61 +59,60 @@ fun PlaceSearchScreen(
         }
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
-    ) { paddingValue->
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                focusManager.clearFocus()
+            },
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(36.dp)
+                    .clickable { onEventSend(PlaceSearchContract.Event.NavigateToBack) }
+                ,
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                contentDescription = null,
+                tint = colorResource(id = R.color.light_gray_hard1)
+            )
+            PlaceSearchBox(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 15.dp)
+                    .padding(end = 10.dp)
+                    .background(
+                        color = colorResource(id = R.color.light_gray_weak1),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .height(50.dp),
+                focusManager = focusManager,
+                value = searchText,
+                onValueChange = { searchText = it }
+            )
+        }
+
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-                .padding(paddingValues = paddingValue)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
-                ) {
-                    focusManager.clearFocus()
-                },
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .size(36.dp)
-                        .clickable { onEventSend(PlaceSearchContract.Event.NavigateToBack) }
-                    ,
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                    contentDescription = null,
-                    tint = colorResource(id = R.color.light_gray_hard1)
-                )
-                PlaceSearchBox(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 15.dp)
-                        .padding(end = 10.dp)
-                        .background(
-                            color = colorResource(id = R.color.light_gray_weak1),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .height(50.dp),
-                    focusManager = focusManager,
-                    value = searchText,
-                    onValueChange = { searchText = it }
-                )
-            }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                when {
-                    state.placeList.isEmpty() -> PlaceListEmpty()
-                    else -> PlaceSearchResult(placeList = state.placeList, onEventSend = onEventSend)
-                }
+            when(state.searchState){
+                PlaceSearchState.INIT -> PlaceListEmpty()
+                PlaceSearchState.LOADING -> PlaceListEmpty()
+                PlaceSearchState.EMPTY -> PlaceListEmpty()
+                PlaceSearchState.SUCCESS -> PlaceSearchResult(placeList = state.placeList, onEventSend = onEventSend)
+                PlaceSearchState.ERROR -> PlaceListError(errorMsg = state.searchStateMsg)
+                PlaceSearchState.NETWORK_ERROR -> PlaceListError(errorMsg = state.searchStateMsg)
             }
         }
     }

@@ -15,8 +15,8 @@ class PlaceSearchContract {
 
     data class State(
         val placeList: List<Place>,
-        val isLoading: Boolean,
-        val isError: Boolean
+        val searchState: PlaceSearchState,
+        val searchStateMsg: String
     ): ViewState
 
     sealed class Effect: ViewSideEffect {

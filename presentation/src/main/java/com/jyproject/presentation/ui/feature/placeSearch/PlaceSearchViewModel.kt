@@ -1,15 +1,9 @@
 package com.jyproject.presentation.ui.feature.placeSearch
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jyproject.domain.features.place.PlaceRepository
-import com.jyproject.domain.models.Place
 import com.jyproject.presentation.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,8 +13,8 @@ class PlaceSearchViewModel @Inject constructor(
 ): BaseViewModel<PlaceSearchContract.Event, PlaceSearchContract.State, PlaceSearchContract.Effect>() {
     override fun setInitialState() = PlaceSearchContract.State(
         placeList = emptyList(),
-        isLoading = true,
-        isError = false
+        searchState = PlaceSearchState.INIT,
+        searchStateMsg = "검색결과가 없습니다."
     )
     override fun handleEvents(event: PlaceSearchContract.Event) {
         when(event) {
@@ -34,11 +28,34 @@ class PlaceSearchViewModel @Inject constructor(
     }
 
     private fun searchPlace(placeName: String){
+        setState { copy(searchState = PlaceSearchState.LOADING) }
         viewModelScope.launch {
             placeRepository.searchPlace(placeName)
-                .onFailure { setState { copy(isError = true) } }
+                .onFailure { exception ->
+                    when(exception){
+                        is java.net.UnknownHostException -> setState {
+                            copy(
+                                searchState = PlaceSearchState.NETWORK_ERROR,
+                                searchStateMsg = "네트워크 연결이 불안정합니다"
+                            )
+                        }
+                        else -> setState {
+                            copy(
+                                searchState = PlaceSearchState.ERROR,
+                                searchStateMsg = "[Error] 관리자에게 문의하세요."
+                            )
+                        }
+                    }
+                }
                 .onSuccess { placeList->
-                    placeList?.let { setState { copy(placeList = placeList) } }
+                    when {
+                        placeList.isNullOrEmpty() -> {
+                            setState { copy(placeList = emptyList(), searchState = PlaceSearchState.EMPTY) }
+                        }
+                        placeList.isNotEmpty() -> {
+                            setState { copy(placeList = placeList, searchState = PlaceSearchState.SUCCESS) }
+                        }
+                    }
                 }
         }
     }
