@@ -14,7 +14,7 @@ class HomeContract {
 
     data class State(
         val placeList: List<Place>,
-        val isLoading: Boolean,
+        val placeState: PlaceState,
     ): ViewState
 
     sealed class Effect: ViewSideEffect {

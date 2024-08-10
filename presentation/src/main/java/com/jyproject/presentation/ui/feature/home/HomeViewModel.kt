@@ -13,13 +13,9 @@ class HomeViewModel @Inject constructor(
     private val placeReadUseCase: PlaceReadUseCase,
     private val placeDeleteUseCase: PlaceDeleteUseCase
 ): BaseViewModel<HomeContract.Event, HomeContract.State, HomeContract.Effect>() {
-    init {
-        getPlaceData()
-    }
-
     override fun setInitialState() = HomeContract.State(
         placeList = emptyList(),
-        isLoading = true,
+        placeState = PlaceState.INIT
     )
 
     override fun handleEvents(event: HomeContract.Event) {
@@ -34,10 +30,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getPlaceData(){
+    fun getPlaceData(){
         viewModelScope.launch {
-            placeReadUseCase().collect{ place->
-                setState { copy(placeList = place, isLoading = false) }
+            try {
+                placeReadUseCase().collect{ place->
+                    setState { copy(placeList = place, placeState = PlaceState.SUCCESS) }
+                }
+            } catch (e: Exception) {
+                setState { copy(placeState = PlaceState.ERROR) }
             }
         }
     }
@@ -47,7 +47,4 @@ class HomeViewModel @Inject constructor(
             placeDeleteUseCase(place)
         }
     }
-
-
-
 }

@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.isGranted
@@ -36,7 +35,6 @@ import kotlinx.coroutines.tasks.await
 )
 @Composable
 fun MapScreen(
-    navController: NavController
 ){
     val context = LocalContext.current
     var showPermissionDialog by remember {
