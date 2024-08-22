@@ -1,5 +1,7 @@
 package com.jyproject.presentation.ui.feature.placeDetail
 
+import android.Manifest
+import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,8 +18,12 @@ import androidx.compose.ui.unit.dp
 import com.jyproject.presentation.ui.feature.placeDetail.composable.AgeChart
 import com.jyproject.presentation.ui.feature.placeDetail.composable.PlaceInfo
 import com.jyproject.presentation.ui.feature.placeDetail.composable.TopBar
+import com.jyproject.presentation.ui.feature.placeDetail.composable.cycle.CycleLocation
 import kotlinx.coroutines.flow.Flow
 
+@RequiresPermission(
+    anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+)
 @Composable
 fun PlaceDetailScreen(
     place: String?,
@@ -58,6 +64,7 @@ fun PlaceDetailScreen(
                 PlaceInfo(state = state)
                 Spacer(modifier = Modifier.size(36.dp))
                 AgeChart(state = state)
+                CycleLocation(state = state)
             }
         }
     }

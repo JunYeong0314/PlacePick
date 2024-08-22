@@ -24,9 +24,8 @@ class PlaceDetailViewModel @Inject constructor(
         placeAreaInfo = null,
         placeInfo = null,
         placeInfoState = PlaceInfoState.INIT,
-        placeStateInfo = "",
         placeStateColor = R.color.light_gray_middle1,
-        placeStateInfoMsg = ""
+        errorMsg = null
     )
 
     override fun handleEvents(event: PlaceDetailContract.Event) {
@@ -47,36 +46,25 @@ class PlaceDetailViewModel @Inject constructor(
     }
 
     fun getPlaceInfo(place: String){
-        setState { copy(placeInfoState = PlaceInfoState.LOADING, placeStateInfo = "연결중", placeStateInfoMsg = "불러오는 중..") }
+        setState { copy(placeInfoState = PlaceInfoState.LOADING) }
         if(place.isNotBlank()){
             viewModelScope.launch {
                 getPlaceInfoUseCase(place)
                     .onFailure { exception->
-                        val errorMsg = when(exception) {
-                            is java.net.UnknownHostException -> "네트워크 연결을 확인하세요."
-                            is java.net.SocketTimeoutException -> "요청시간 초과"
-                            else -> "[Error] 데이터를 불러올 수 없습니다."
+                        val errorState = when(exception) {
+                            is java.net.UnknownHostException -> PlaceInfoState.NETWORK_ERROR
+                            is java.net.SocketTimeoutException -> PlaceInfoState.NETWORK_ERROR
+                            else -> PlaceInfoState.ERROR
                         }
-
-                        setState {
-                            copy(
-                                placeInfoState = PlaceInfoState.ERROR,
-                                placeStateInfo = "에러",
-                                placeStateInfoMsg = errorMsg,
-                                placeStateColor = R.color.error_red
-                            )
-                        }
-
+                        setState { copy(placeInfoState = errorState, errorMsg = exception.message) }
                     }
                     .onSuccess { response->
                         response?.let {
                             setState {
                                 copy(
                                     placeInfo = response,
-                                    placeStateInfo = response.livePeopleInfo ?: "",
                                     placeStateColor = uiMapper.mapperLivePeopleColor(response.livePeopleInfo ?: ""),
                                     placeInfoState = PlaceInfoState.SUCCESS,
-                                    placeStateInfoMsg = response.livePeopleInfoMsg ?: ""
                                 )
                             }
                         }

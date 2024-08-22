@@ -1,4 +1,4 @@
-package com.jyproject.presentation.ui.feature.home
+package com.jyproject.presentation.ui.feature.placeDetail.composable.cycle
 import android.Manifest
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Column
@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
@@ -25,6 +26,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.jyproject.presentation.ui.feature.placeDetail.PlaceDetailContract
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -34,7 +36,8 @@ import kotlinx.coroutines.tasks.await
     anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
 )
 @Composable
-fun MapScreen(
+fun CycleLocation(
+    state: PlaceDetailContract.State,
 ){
     val context = LocalContext.current
     var showPermissionDialog by remember {
@@ -51,21 +54,23 @@ fun MapScreen(
     val allRequiredPermission =
         permissionState.revokedPermissions.none { it.permission in permissions.first() }
 
-
-    if(allRequiredPermission) {
-        LocationButton(
-            locationProviderClient = locationProviderClient,
-            userPreciseLocation =
-            permissionState.permissions
-                .filter { it.status.isGranted }
-                .map { it.permission }
-                .contains(Manifest.permission.ACCESS_FINE_LOCATION)
-        )
-    }else{
-        Button(
-            onClick = { showPermissionDialog = true }
-        ) {
-            Text(text = "Click")
+    Column(){
+        Text(text = "${state.placeAreaInfo?.placeArea} 따릉이 정보")
+        if(allRequiredPermission) {
+            LocationButton(
+                locationProviderClient = locationProviderClient,
+                userPreciseLocation =
+                permissionState.permissions
+                    .filter { it.status.isGranted }
+                    .map { it.permission }
+                    .contains(Manifest.permission.ACCESS_FINE_LOCATION)
+            )
+        }else{
+            Button(
+                onClick = { showPermissionDialog = true }
+            ) {
+                Text(text = "Click")
+            }
         }
     }
 
@@ -125,6 +130,7 @@ fun LocationDialog(
     showPermissionDialog: (Boolean) -> Unit
 ){
     AlertDialog(
+        containerColor = Color.White,
         onDismissRequest = { showPermissionDialog(false) },
         title = {
             Text(text = "위치정보 권한 요청")
@@ -139,12 +145,12 @@ fun LocationDialog(
                     permissionState.launchMultiplePermissionRequest()
                 }
             ) {
-                Text(text = "확인")
+                Text(text = "확인", color = Color.Black)
             }
         },
         dismissButton = {
             TextButton(onClick = { showPermissionDialog(false) }) {
-                Text(text = "취소")
+                Text(text = "취소", color = Color.Red)
             }
         }
     )

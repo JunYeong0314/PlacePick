@@ -1,4 +1,4 @@
-package com.jyproject.presentation.ui.feature.placeDetail.composable
+package com.jyproject.presentation.ui.feature.common.dialog
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
@@ -13,7 +13,7 @@ import androidx.compose.ui.res.colorResource
 import com.jyproject.presentation.R
 
 @Composable
-fun DeleteCheckDialog(
+fun PlaceDeleteDialog(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit
 ){

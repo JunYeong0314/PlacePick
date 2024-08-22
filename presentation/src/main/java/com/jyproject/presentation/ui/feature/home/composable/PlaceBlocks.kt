@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jyproject.domain.models.Place
 import com.jyproject.presentation.R
+import com.jyproject.presentation.ui.feature.common.dialog.PlaceDeleteDialog
 import com.jyproject.presentation.ui.feature.home.HomeContract
-import com.jyproject.presentation.ui.feature.placeDetail.composable.DeleteCheckDialog
 import com.jyproject.presentation.ui.util.modifierExtensions.singleClick.clickableSingle
 
 @Composable
@@ -98,7 +98,7 @@ fun PlaceBlock(
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     if(showDeleteDialog) {
-        DeleteCheckDialog(
+        PlaceDeleteDialog(
             onDismissRequest = { showDeleteDialog = false },
             onConfirmation = {
                 onEventSend(HomeContract.Event.DeletePlace(place))

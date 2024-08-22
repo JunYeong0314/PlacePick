@@ -1,4 +1,4 @@
-package com.jyproject.presentation.ui.feature.common
+package com.jyproject.presentation.ui.feature.common.util
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

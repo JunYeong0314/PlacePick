@@ -8,13 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.jyproject.presentation.ui.feature.home.composable.PlaceBlocks
 import kotlinx.coroutines.flow.Flow
 
-@RequiresPermission(
-    anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
-)
 @Composable
 fun HomeScreen(
     state: HomeContract.State,
@@ -35,7 +31,6 @@ fun HomeScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        MapScreen()
         PlaceBlocks(
             onEventSend = onEventSend,
             state = state,

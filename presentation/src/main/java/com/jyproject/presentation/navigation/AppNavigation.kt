@@ -25,8 +25,8 @@ import com.jyproject.presentation.anim.horizontallyAnimatedComposableArguments
 import com.jyproject.presentation.anim.noAnimatedComposable
 import com.jyproject.presentation.anim.verticallyAnimatedComposable
 import com.jyproject.presentation.anim.verticallyAnimatedComposableArguments
-import com.jyproject.presentation.ui.feature.common.BottomBar
-import com.jyproject.presentation.ui.feature.common.TopBar
+import com.jyproject.presentation.ui.feature.common.util.BottomBar
+import com.jyproject.presentation.ui.feature.common.util.TopBar
 import com.jyproject.presentation.ui.feature.mypage.MyPageScreen
 
 @Composable

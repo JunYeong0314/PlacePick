@@ -18,9 +18,8 @@ class PlaceDetailContract {
         val placeInfo: PlaceInfo?,
         val placeAreaInfo: Place?,
         val placeInfoState: PlaceInfoState,
-        val placeStateInfo: String,
         val placeStateColor: Int,
-        val placeStateInfoMsg: String
+        val errorMsg: String?
     ): ViewState
 
     sealed class Effect: ViewSideEffect {

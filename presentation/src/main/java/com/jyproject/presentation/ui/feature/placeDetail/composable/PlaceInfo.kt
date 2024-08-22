@@ -46,7 +46,7 @@ fun PlaceInfo(state: PlaceDetailContract.State,) {
                 .padding(vertical = 2.dp)
                 .padding(start = 6.dp, end = 8.dp)
                 .width(250.dp),
-            text = state.placeStateInfoMsg,
+            text = state.placeInfo?.livePeopleInfoMsg ?: "불러오는 중..",
             fontSize = 12.sp
         )
     }

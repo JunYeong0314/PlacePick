@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jyproject.presentation.R
+import com.jyproject.presentation.ui.feature.common.dialog.PlaceDeleteDialog
 import com.jyproject.presentation.ui.feature.placeDetail.PlaceDetailContract
 
 @Composable
@@ -51,7 +52,7 @@ fun TopBar(
     var showInfoDialog by remember { mutableStateOf(false) }
 
     if(showDeleteDialog) {
-        DeleteCheckDialog(
+        PlaceDeleteDialog(
             onDismissRequest = { showDeleteDialog = false },
             onConfirmation = {
                 onEventSend(PlaceDetailContract.Event.DeletePlace(place))
@@ -90,7 +91,7 @@ fun TopBar(
                     shape = RoundedCornerShape(8.dp)
                 )
                 .padding(horizontal = 8.dp),
-            text = state.placeStateInfo,
+            text = state.placeInfo?.livePeopleInfo ?: "연결중",
             color = Color.White,
             fontWeight = FontWeight.Bold,
             fontSize = 12.sp
