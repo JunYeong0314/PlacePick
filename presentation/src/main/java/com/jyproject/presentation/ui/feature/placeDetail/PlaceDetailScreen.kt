@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -59,11 +58,11 @@ fun PlaceDetailScreen(
                     .padding(innerPadding)
                     .background(Color.White)
                     .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 PlaceInfo(state = state)
                 Spacer(modifier = Modifier.size(36.dp))
                 AgeChart(state = state)
+                Spacer(modifier = Modifier.size(24.dp))
                 CycleLocation(state = state)
             }
         }

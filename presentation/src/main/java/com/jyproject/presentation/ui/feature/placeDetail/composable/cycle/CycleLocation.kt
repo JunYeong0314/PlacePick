@@ -2,10 +2,10 @@ package com.jyproject.presentation.ui.feature.placeDetail.composable.cycle
 import android.Manifest
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -16,8 +16,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.isGranted
@@ -54,8 +57,13 @@ fun CycleLocation(
     val allRequiredPermission =
         permissionState.revokedPermissions.none { it.permission in permissions.first() }
 
-    Column(){
-        Text(text = "${state.placeAreaInfo?.placeArea} 따릉이 정보")
+    Column(
+        modifier = Modifier.padding(start = 12.dp)
+    ) {
+        Text(
+            text = "${state.placeAreaInfo?.placeArea} 따릉이 정보",
+            fontWeight = FontWeight.Bold
+        )
         if(allRequiredPermission) {
             LocationButton(
                 locationProviderClient = locationProviderClient,
@@ -66,11 +74,7 @@ fun CycleLocation(
                     .contains(Manifest.permission.ACCESS_FINE_LOCATION)
             )
         }else{
-            Button(
-                onClick = { showPermissionDialog = true }
-            ) {
-                Text(text = "Click")
-            }
+            NoPermission(onClickPermission = { showPermissionDialog = true })
         }
     }
 
