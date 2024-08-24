@@ -59,7 +59,8 @@ class LoginViewModel @Inject constructor(
 
     fun signUp() {
         viewModelScope.launch {
-            signUpUseCase(userNumber)
+            // TODO 회원가입 닉네임 수정 필요
+            signUpUseCase(userNumber, "")
                 .onFailure { setState { copy(loginState = LoginState.ERROR) } }
                 .onSuccess { token->
                     token?.let { userDataRepository.setUserData("token", token) }

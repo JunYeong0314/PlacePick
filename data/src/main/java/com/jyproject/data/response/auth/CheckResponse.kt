@@ -4,8 +4,13 @@ package com.jyproject.data.response.auth
 import com.squareup.moshi.Json
 
 data class CheckResponse(
-    @field:Json(name = "exists")
+    @Json(name = "response")
+    val response: Response?
+)
+
+data class Response(
+    @Json(name = "exists")
     val exists: Boolean?,
-    @field:Json(name = "token")
+    @Json(name = "token")
     val token: String?
 )

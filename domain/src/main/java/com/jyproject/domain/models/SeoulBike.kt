@@ -1,6 +1,6 @@
 package com.jyproject.domain.models
 
-data class Cycle(
+data class SeoulBike(
     val rentalName: String?,
     val region: String?,
     val regionDetail: String?,

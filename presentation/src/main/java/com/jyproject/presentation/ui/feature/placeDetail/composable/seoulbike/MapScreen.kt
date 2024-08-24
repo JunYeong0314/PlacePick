@@ -1,0 +1,109 @@
+package com.jyproject.presentation.ui.feature.placeDetail.composable.seoulbike
+
+import android.Manifest
+import androidx.annotation.RequiresPermission
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.jyproject.presentation.R
+import com.jyproject.presentation.ui.feature.placeDetail.PlaceDetailContract
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraPosition
+import com.naver.maps.map.compose.CameraPositionState
+import com.naver.maps.map.compose.ExperimentalNaverMapApi
+import com.naver.maps.map.compose.MapUiSettings
+import com.naver.maps.map.compose.Marker
+import com.naver.maps.map.compose.MarkerState
+import com.naver.maps.map.compose.NaverMap
+import com.naver.maps.map.compose.rememberCameraPositionState
+
+@OptIn(ExperimentalNaverMapApi::class)
+@RequiresPermission(
+    anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+)
+@Composable
+fun MapScreen(
+    state: PlaceDetailContract.State,
+    locationProviderClient: FusedLocationProviderClient,
+    userPreciseLocation: Boolean,
+){
+    val mapUiSettings by remember {
+        mutableStateOf(
+            MapUiSettings(
+                isLocationButtonEnabled = true,
+                isZoomControlEnabled = false
+            )
+        )
+    }
+
+    /*LaunchedEffect(userPreciseLocation) {
+        val priority = if (userPreciseLocation){
+            Priority.PRIORITY_HIGH_ACCURACY
+        } else {
+            Priority.PRIORITY_BALANCED_POWER_ACCURACY
+        }
+
+        val result = locationProviderClient.getCurrentLocation(
+            priority,
+            CancellationTokenSource().token,
+        ).await()
+
+        result?.let { fetchedLocation->
+            currentLocation = LatLng(fetchedLocation.latitude, fetchedLocation.longitude)
+        }
+    }*/
+
+    if(!state.seoulBikeInfo.isNullOrEmpty()){
+        val initLocation = LatLng(state.seoulBikeInfo[0].latitude!!, state.seoulBikeInfo[0].longitude!!)
+        val cameraPositionState: CameraPositionState = rememberCameraPositionState {
+            position = CameraPosition(initLocation, 11.0)
+        }
+
+        NaverMap(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(8.dp)),
+            uiSettings = mapUiSettings,
+            cameraPositionState = cameraPositionState
+        ){
+            state.seoulBikeInfo.map {
+                Marker(
+                    width = 12.dp,
+                    height = 24.dp,
+                    state = MarkerState(position = LatLng(it.latitude!!, it.longitude!!)),
+                )
+            }
+        }
+    }else{
+        Column(
+            modifier = Modifier
+                .background(color = colorResource(id = R.color.light_gray_weak1))
+                .fillMaxSize()
+                .clip(RoundedCornerShape(8.dp)),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "플레이스 픽",
+                fontWeight = FontWeight.ExtraBold,
+                color = colorResource(id = R.color.light_gray_middle1),
+                fontSize = 28.sp
+            )
+        }
+    }
+}

@@ -1,6 +1,5 @@
 package com.jyproject.data.features.auth
 
-import android.util.Log
 import com.jyproject.data.remote.service.auth.CheckService
 import com.jyproject.data.remote.service.auth.SignUpService
 import com.jyproject.data.request.auth.SignUpRequest
@@ -15,18 +14,20 @@ class AuthRepositoryImpl @Inject constructor(
 ): AuthRepository {
     override suspend fun checkMember(userNum: String): Result<Boolean?> {
         return runCatching {
-            val result = checkService.getCheck(userNum).body()
+            val result = checkService.getCheck(userNum = userNum).body()?.response
 
             result?.let {
                 val token = it.token
-                if(!token.isNullOrBlank()) userDataRepository.setUserData("token", token) // 유효기간이 만료된 토큰은 자동갱신
+                if (!token.isNullOrBlank()) {
+                    userDataRepository.setUserData("token", token)
+                }
                 it.exists
             }
         }
     }
 
-    override suspend fun signUp(userNum: String): Result<String?> {
-        val num = SignUpRequest(userNum = userNum)
+    override suspend fun signUp(userNum: String, nick: String): Result<String?> {
+        val num = SignUpRequest(userNum = userNum, nick = nick)
 
         return runCatching {
             signUpService.signUp(num).body()?.token

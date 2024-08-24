@@ -3,9 +3,9 @@ package com.jyproject.data.di
 import com.jyproject.data.AppInterceptor
 import com.jyproject.data.remote.service.auth.CheckService
 import com.jyproject.data.remote.service.auth.SignUpService
-import com.jyproject.data.remote.service.cycle.GetCycleInfoService
 import com.jyproject.data.remote.service.place.GetPlaceInfoService
 import com.jyproject.data.remote.service.place.SearchPlaceService
+import com.jyproject.data.remote.service.seoulbike.GetSeoulBikeInfoService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -121,7 +121,7 @@ class ApiModule {
 
     @Singleton
     @Provides
-    fun provideCycleInfo(@BaseRetrofit retrofit: Retrofit): GetCycleInfoService {
-        return retrofit.create(GetCycleInfoService::class.java)
+    fun provideSeoulBikeInfo(@BaseRetrofit retrofit: Retrofit): GetSeoulBikeInfoService {
+        return retrofit.create(GetSeoulBikeInfoService::class.java)
     }
 }

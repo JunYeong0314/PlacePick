@@ -1,5 +1,6 @@
 package com.jyproject.presentation.ui.feature.placeDetail
 
+import com.jyproject.domain.models.SeoulBike
 import com.jyproject.domain.models.Place
 import com.jyproject.domain.models.PlaceInfo
 import com.jyproject.presentation.ui.base.ViewEvent
@@ -19,6 +20,7 @@ class PlaceDetailContract {
         val placeAreaInfo: Place?,
         val placeInfoState: PlaceInfoState,
         val placeStateColor: Int,
+        val seoulBikeInfo: List<SeoulBike>?,
         val errorMsg: String?
     ): ViewState
 

@@ -4,5 +4,7 @@ import com.squareup.moshi.Json
 
 data class SignUpRequest(
     @field:Json(name = "userNum")
-    val userNum: String?
+    val userNum: String?,
+    @field:Json(name = "nick")
+    val nick: String?
 )

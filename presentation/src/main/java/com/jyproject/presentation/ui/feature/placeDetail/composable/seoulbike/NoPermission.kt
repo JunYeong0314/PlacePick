@@ -1,4 +1,4 @@
-package com.jyproject.presentation.ui.feature.placeDetail.composable.cycle
+package com.jyproject.presentation.ui.feature.placeDetail.composable.seoulbike
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

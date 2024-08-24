@@ -3,6 +3,7 @@ package com.jyproject.presentation.navigation
 import android.Manifest
 import androidx.annotation.RequiresPermission
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.jyproject.presentation.ui.feature.common.error.ErrorScreen
@@ -45,6 +46,12 @@ fun PlaceDetailScreenDestination(
             )
         }
         PlaceInfoState.SUCCESS -> {
+            LaunchedEffect(viewModel.viewState.value.seoulBikeInfo) {
+                if(!viewModel.viewState.value.placeAreaInfo?.placeArea.isNullOrBlank()){
+                    viewModel.getSeoulBikeLocationInfo(viewModel.viewState.value.placeAreaInfo?.placeArea)
+                }
+            }
+
             PlaceDetailScreen(
                 place = place,
                 state = viewModel.viewState.value,

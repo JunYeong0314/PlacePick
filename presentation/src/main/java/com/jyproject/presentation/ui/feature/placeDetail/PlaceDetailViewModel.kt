@@ -1,10 +1,10 @@
 package com.jyproject.presentation.ui.feature.placeDetail
 
 import androidx.lifecycle.viewModelScope
-import com.jyproject.domain.features.cycle.GetCycleInfoUseCase
 import com.jyproject.domain.features.db.usecase.GetPlaceDBInfoUseCase
 import com.jyproject.domain.features.db.usecase.PlaceDeleteUseCase
 import com.jyproject.domain.features.place.usecase.GetPlaceInfoUseCase
+import com.jyproject.domain.features.seoulbike.GetSeoulBikeInfoUseCase
 import com.jyproject.presentation.R
 import com.jyproject.presentation.mappers.UiMapper
 import com.jyproject.presentation.ui.base.BaseViewModel
@@ -17,7 +17,7 @@ class PlaceDetailViewModel @Inject constructor(
     private val getPlaceInfoUseCase: GetPlaceInfoUseCase,
     private val placeDeleteUseCase: PlaceDeleteUseCase,
     private val getPlaceDBInfoUseCase: GetPlaceDBInfoUseCase,
-    private val getCycleInfoUseCase: GetCycleInfoUseCase,
+    private val getSeoulBikeInfoUseCase: GetSeoulBikeInfoUseCase,
     private val uiMapper: UiMapper
 ): BaseViewModel<PlaceDetailContract.Event, PlaceDetailContract.State, PlaceDetailContract.Effect>() {
     override fun setInitialState() = PlaceDetailContract.State(
@@ -25,6 +25,7 @@ class PlaceDetailViewModel @Inject constructor(
         placeInfo = null,
         placeInfoState = PlaceInfoState.INIT,
         placeStateColor = R.color.light_gray_middle1,
+        seoulBikeInfo = emptyList(),
         errorMsg = null
     )
 
@@ -79,6 +80,27 @@ class PlaceDetailViewModel @Inject constructor(
                 getPlaceDBInfoUseCase(place).let { place->
                     setState { copy(placeAreaInfo = place) }
                 }
+            }
+        }
+    }
+
+    fun getSeoulBikeLocationInfo(regionName: String?) {
+        if(!regionName.isNullOrEmpty()) {
+            viewModelScope.launch {
+                getSeoulBikeInfoUseCase(regionName)
+                    .onFailure { exception->
+                        val errorState = when(exception) {
+                            is java.net.UnknownHostException -> PlaceInfoState.NETWORK_ERROR
+                            is java.net.SocketTimeoutException -> PlaceInfoState.NETWORK_ERROR
+                            else -> PlaceInfoState.ERROR
+                        }
+                        setState { copy(placeInfoState = errorState, errorMsg = exception.message) }
+                    }
+                    .onSuccess { response->
+                        response?.let {
+                            setState { copy(seoulBikeInfo = response) }
+                        }
+                    }
             }
         }
     }

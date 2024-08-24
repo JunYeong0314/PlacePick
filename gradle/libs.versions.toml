@@ -1,6 +1,7 @@
 [versions]
 agp = "8.3.2"
 datastore-preferences = "1.1.1"
+google-play-services-location = "21.0.1"
 gradle = "8.0.2"
 kotlin-gradle-plugin = "1.9.20"
 kotlin = "2.0.0"
@@ -61,6 +62,7 @@ flow = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", vers
 
 # Vico
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+play-services-location-v2101 = { module = "com.google.android.gms:play-services-location", version.ref = "google-play-services-location" }
 vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
 vico-compose-m2 = { group = "com.patrykandpatrick.vico", name = "compose-m2", version.ref = "vico" }
 vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
