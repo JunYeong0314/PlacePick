@@ -26,7 +26,7 @@ class PlaceDetailViewModel @Inject constructor(
         placeInfoState = PlaceInfoState.INIT,
         placeStateColor = R.color.light_gray_middle1,
         seoulBikeInfo = emptyList(),
-        errorMsg = null
+        errorThrowable = null
     )
 
     override fun handleEvents(event: PlaceDetailContract.Event) {
@@ -37,6 +37,8 @@ class PlaceDetailViewModel @Inject constructor(
                 setEffect { PlaceDetailContract.Effect.Navigation.ToMain }
             is PlaceDetailContract.Event.NavigationToBack ->
                 setEffect { PlaceDetailContract.Effect.Navigation.ToBack }
+            is PlaceDetailContract.Event.NavigationToMap ->
+                setEffect { PlaceDetailContract.Effect.Navigation.ToMap }
         }
     }
 
@@ -57,7 +59,7 @@ class PlaceDetailViewModel @Inject constructor(
                             is java.net.SocketTimeoutException -> PlaceInfoState.NETWORK_ERROR
                             else -> PlaceInfoState.ERROR
                         }
-                        setState { copy(placeInfoState = errorState, errorMsg = exception.message) }
+                        setState { copy(placeInfoState = errorState, errorThrowable = exception) }
                     }
                     .onSuccess { response->
                         response?.let {
@@ -94,7 +96,7 @@ class PlaceDetailViewModel @Inject constructor(
                             is java.net.SocketTimeoutException -> PlaceInfoState.NETWORK_ERROR
                             else -> PlaceInfoState.ERROR
                         }
-                        setState { copy(placeInfoState = errorState, errorMsg = exception.message) }
+                        setState { copy(placeInfoState = errorState, errorThrowable = exception) }
                     }
                     .onSuccess { response->
                         response?.let {

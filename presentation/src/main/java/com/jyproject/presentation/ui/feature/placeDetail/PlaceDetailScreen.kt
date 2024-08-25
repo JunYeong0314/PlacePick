@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.jyproject.presentation.ui.feature.placeDetail.composable.AgeChart
 import com.jyproject.presentation.ui.feature.placeDetail.composable.PlaceInfo
 import com.jyproject.presentation.ui.feature.placeDetail.composable.TopBar
-import com.jyproject.presentation.ui.feature.placeDetail.composable.seoulbike.SeoulBikeLocation
+import com.jyproject.presentation.ui.feature.placeDetail.composable.seoulbike.SeoulBikeLocationMap
 import kotlinx.coroutines.flow.Flow
 
 @RequiresPermission(
@@ -38,6 +38,8 @@ fun PlaceDetailScreen(
                     onEffectSend(PlaceDetailContract.Effect.Navigation.ToBack)
                 is PlaceDetailContract.Effect.Navigation.ToMain ->
                     onEffectSend(PlaceDetailContract.Effect.Navigation.ToMain)
+                is PlaceDetailContract.Effect.Navigation.ToMap ->
+                    onEffectSend(PlaceDetailContract.Effect.Navigation.ToMap)
             }
         }
     }
@@ -63,7 +65,7 @@ fun PlaceDetailScreen(
                 Spacer(modifier = Modifier.size(36.dp))
                 AgeChart(state = state)
                 Spacer(modifier = Modifier.size(24.dp))
-                SeoulBikeLocation(state = state)
+                SeoulBikeLocationMap(state = state, onEventSend = onEventSend)
             }
         }
     }

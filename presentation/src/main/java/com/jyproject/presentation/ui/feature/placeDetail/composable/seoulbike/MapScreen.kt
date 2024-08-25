@@ -19,7 +19,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.jyproject.presentation.R
 import com.jyproject.presentation.ui.feature.placeDetail.PlaceDetailContract
 import com.naver.maps.geometry.LatLng
@@ -30,7 +29,9 @@ import com.naver.maps.map.compose.MapUiSettings
 import com.naver.maps.map.compose.Marker
 import com.naver.maps.map.compose.MarkerState
 import com.naver.maps.map.compose.NaverMap
+import com.naver.maps.map.compose.NaverMapConstants
 import com.naver.maps.map.compose.rememberCameraPositionState
+import com.naver.maps.map.overlay.OverlayImage
 
 @OptIn(ExperimentalNaverMapApi::class)
 @RequiresPermission(
@@ -39,34 +40,17 @@ import com.naver.maps.map.compose.rememberCameraPositionState
 @Composable
 fun MapScreen(
     state: PlaceDetailContract.State,
-    locationProviderClient: FusedLocationProviderClient,
-    userPreciseLocation: Boolean,
+    onEventSend: (event: PlaceDetailContract.Event) -> Unit,
 ){
     val mapUiSettings by remember {
         mutableStateOf(
             MapUiSettings(
-                isLocationButtonEnabled = true,
-                isZoomControlEnabled = false
+                pickTolerance = NaverMapConstants.DefaultPickTolerance,
+                isZoomControlEnabled = false,
+                isScaleBarEnabled = false,
             )
         )
     }
-
-    /*LaunchedEffect(userPreciseLocation) {
-        val priority = if (userPreciseLocation){
-            Priority.PRIORITY_HIGH_ACCURACY
-        } else {
-            Priority.PRIORITY_BALANCED_POWER_ACCURACY
-        }
-
-        val result = locationProviderClient.getCurrentLocation(
-            priority,
-            CancellationTokenSource().token,
-        ).await()
-
-        result?.let { fetchedLocation->
-            currentLocation = LatLng(fetchedLocation.latitude, fetchedLocation.longitude)
-        }
-    }*/
 
     if(!state.seoulBikeInfo.isNullOrEmpty()){
         val initLocation = LatLng(state.seoulBikeInfo[0].latitude!!, state.seoulBikeInfo[0].longitude!!)
@@ -79,12 +63,16 @@ fun MapScreen(
                 .fillMaxSize()
                 .clip(RoundedCornerShape(8.dp)),
             uiSettings = mapUiSettings,
-            cameraPositionState = cameraPositionState
+            cameraPositionState = cameraPositionState,
+            onMapClick = {_, _->
+                onEventSend(PlaceDetailContract.Event.NavigationToMap)
+            }
         ){
             state.seoulBikeInfo.map {
                 Marker(
-                    width = 12.dp,
-                    height = 24.dp,
+                    width = 14.dp,
+                    height = 14.dp,
+                    icon = OverlayImage.fromResource(R.drawable.ic_seoulbike),
                     state = MarkerState(position = LatLng(it.latitude!!, it.longitude!!)),
                 )
             }

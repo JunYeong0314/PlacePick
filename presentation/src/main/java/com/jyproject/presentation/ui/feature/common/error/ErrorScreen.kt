@@ -33,7 +33,7 @@ import com.jyproject.presentation.R
 
 @Composable
 fun ErrorScreen(
-    exception: Exception,
+    exception: Throwable?,
     onClickErrorSend: (String) -> Unit,
     onClickClear: () -> Unit
 ) {
@@ -71,7 +71,7 @@ fun ErrorScreen(
                     .padding(horizontal = 24.dp, vertical = 24.dp)
                     .fillMaxWidth()
                 ,
-                onClick = { onClickErrorSend(exception.message.toString()) },
+                onClick = { onClickErrorSend(exception?.message.toString()) },
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(id = R.color.app_base)

@@ -31,8 +31,8 @@ fun PlaceDetailScreenDestination(
         PlaceInfoState.LOADING -> CircularProgress()
         PlaceInfoState.ERROR -> { 
             ErrorScreen(
-                exception = Exception(),
-                onClickErrorSend = { viewModel.viewState.value.errorMsg },
+                exception = viewModel.viewState.value.errorThrowable,
+                onClickErrorSend = {  },
                 onClickClear = { navController.navigateUp() }
             )
         }
@@ -47,8 +47,11 @@ fun PlaceDetailScreenDestination(
         }
         PlaceInfoState.SUCCESS -> {
             LaunchedEffect(viewModel.viewState.value.seoulBikeInfo) {
-                if(!viewModel.viewState.value.placeAreaInfo?.placeArea.isNullOrBlank()){
-                    viewModel.getSeoulBikeLocationInfo(viewModel.viewState.value.placeAreaInfo?.placeArea)
+                if(!viewModel.viewState.value.placeAreaInfo?.placeArea.isNullOrBlank() &&
+                    viewModel.viewState.value.seoulBikeInfo.isNullOrEmpty()) {
+                    viewModel.getSeoulBikeLocationInfo(
+                        viewModel.viewState.value.placeAreaInfo?.placeArea
+                    )
                 }
             }
 
@@ -67,6 +70,11 @@ fun PlaceDetailScreenDestination(
                                 inclusive = true
                             )
                             navController.navigate(Navigation.Routes.HOME)
+                        }
+                        is PlaceDetailContract.Effect.Navigation.ToMap -> {
+                            viewModel.viewState.value.placeAreaInfo?.placeArea?.let {
+                                navController.navigateToMapDetail(placeArea = it)
+                            }
                         }
                     }
                 }

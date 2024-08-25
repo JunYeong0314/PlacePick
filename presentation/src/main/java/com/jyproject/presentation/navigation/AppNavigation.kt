@@ -41,7 +41,8 @@ fun AppNavigation(
     val routesWithoutBar = listOf(
         Navigation.Routes.PLACE_SEARCH, Navigation.Routes.LOGIN,
         "${Navigation.Routes.PLACE_ADD}/{${Navigation.Args.PLACE_ADD_NAME}}",
-        "${Navigation.Routes.PLACE_DETAIL}/{${Navigation.Args.PLACE_DETAIL_NAME}}"
+        "${Navigation.Routes.PLACE_DETAIL}/{${Navigation.Args.PLACE_DETAIL_NAME}}",
+        "${Navigation.Routes.MAP_DETAIL}/{${Navigation.Args.MAP_DETAIL_NAME}}"
     )
     var isBar by remember { mutableStateOf(true) }
 
@@ -100,6 +101,20 @@ fun AppNavigation(
             }
 
             noAnimatedComposable(Navigation.Routes.MYPAGE) { MyPageScreen(navController = navController) }
+
+            verticallyAnimatedComposableArguments(
+                route = "${Navigation.Routes.MAP_DETAIL}/{${Navigation.Args.MAP_DETAIL_NAME}}",
+                arguments = listOf(navArgument(Navigation.Args.MAP_DETAIL_NAME){
+                    type = NavType.StringType
+                })
+            ) { navBackStackEntry ->
+                val placeArea =
+                    requireNotNull(navBackStackEntry.arguments?.getString(Navigation.Args.MAP_DETAIL_NAME)){
+                        "Require placeArea"
+                    }
+
+                MapDetailScreenDestination(placeArea = placeArea, navController = navController)
+            }
         }
     }
 
@@ -111,6 +126,10 @@ fun NavController.navigateToPlaceDetail(place: String) {
 
 fun NavController.navigateToPlaceAdd(place: String) {
     navigate(route = "${Navigation.Routes.PLACE_ADD}/$place")
+}
+
+fun NavController.navigateToMapDetail(placeArea: String) {
+    navigate(route = "${Navigation.Routes.MAP_DETAIL}/$placeArea")
 }
 
 sealed class Screen(val route: String, @StringRes val resourceId: Int, val icon: ImageVector){

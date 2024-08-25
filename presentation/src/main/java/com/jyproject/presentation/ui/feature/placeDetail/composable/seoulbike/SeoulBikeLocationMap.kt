@@ -15,14 +15,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
-import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.android.gms.location.LocationServices
 import com.jyproject.presentation.ui.feature.placeDetail.PlaceDetailContract
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -30,15 +27,12 @@ import com.jyproject.presentation.ui.feature.placeDetail.PlaceDetailContract
     anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
 )
 @Composable
-fun SeoulBikeLocation(
+fun SeoulBikeLocationMap(
     state: PlaceDetailContract.State,
+    onEventSend: (event: PlaceDetailContract.Event) -> Unit,
 ){
-    val context = LocalContext.current
     var showPermissionDialog by remember {
         mutableStateOf(false)
-    }
-    val locationProviderClient = remember {
-        LocationServices.getFusedLocationProviderClient(context)
     }
     val permissions = listOf(
         Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -61,12 +55,7 @@ fun SeoulBikeLocation(
         if(allRequiredPermission) {
             MapScreen(
                 state = state,
-                locationProviderClient = locationProviderClient ,
-                userPreciseLocation =
-                    permissionState.permissions
-                        .filter { it.status.isGranted }
-                        .map { it.permission }
-                        .contains(Manifest.permission.ACCESS_FINE_LOCATION)
+                onEventSend = onEventSend
             )
         }else{
             NoPermission(onClickPermission = { showPermissionDialog = true })
