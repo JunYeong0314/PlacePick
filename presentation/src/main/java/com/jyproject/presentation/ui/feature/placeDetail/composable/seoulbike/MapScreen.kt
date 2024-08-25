@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,12 +22,15 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraPosition
 import com.naver.maps.map.compose.CameraPositionState
 import com.naver.maps.map.compose.ExperimentalNaverMapApi
+import com.naver.maps.map.compose.LocationTrackingMode
+import com.naver.maps.map.compose.MapProperties
 import com.naver.maps.map.compose.MapUiSettings
 import com.naver.maps.map.compose.Marker
 import com.naver.maps.map.compose.MarkerState
 import com.naver.maps.map.compose.NaverMap
 import com.naver.maps.map.compose.NaverMapConstants
 import com.naver.maps.map.compose.rememberCameraPositionState
+import com.naver.maps.map.compose.rememberFusedLocationSource
 import com.naver.maps.map.overlay.OverlayImage
 
 @OptIn(ExperimentalNaverMapApi::class)
@@ -42,16 +42,6 @@ fun MapScreen(
     state: PlaceDetailContract.State,
     onEventSend: (event: PlaceDetailContract.Event) -> Unit,
 ){
-    val mapUiSettings by remember {
-        mutableStateOf(
-            MapUiSettings(
-                pickTolerance = NaverMapConstants.DefaultPickTolerance,
-                isZoomControlEnabled = false,
-                isScaleBarEnabled = false,
-            )
-        )
-    }
-
     if(!state.seoulBikeInfo.isNullOrEmpty()){
         val initLocation = LatLng(state.seoulBikeInfo[0].latitude!!, state.seoulBikeInfo[0].longitude!!)
         val cameraPositionState: CameraPositionState = rememberCameraPositionState {
@@ -62,7 +52,15 @@ fun MapScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(8.dp)),
-            uiSettings = mapUiSettings,
+            locationSource = rememberFusedLocationSource(),
+            properties = MapProperties(
+                locationTrackingMode = LocationTrackingMode.NoFollow
+            ),
+            uiSettings = MapUiSettings(
+                pickTolerance = NaverMapConstants.DefaultPickTolerance,
+                isZoomControlEnabled = false,
+                isScaleBarEnabled = false,
+            ),
             cameraPositionState = cameraPositionState,
             onMapClick = {_, _->
                 onEventSend(PlaceDetailContract.Event.NavigationToMap)
