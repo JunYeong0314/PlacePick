@@ -5,10 +5,12 @@ object Navigation {
         const val PLACE_ADD_NAME = "placeAddName"
         const val PLACE_DETAIL_NAME = "placeDetailName"
         const val MAP_DETAIL_NAME = "mapDetailName"
+        const val REGISTER_NAME = "registerName"
     }
 
     object Routes {
         const val LOGIN = "login"
+        const val REGISTER = "register"
         const val HOME = "home"
         const val MYPAGE = "mypage"
         const val PLACE_SEARCH = "placeSearch"

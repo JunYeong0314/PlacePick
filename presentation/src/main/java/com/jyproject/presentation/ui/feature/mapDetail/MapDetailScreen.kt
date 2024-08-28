@@ -3,6 +3,7 @@ package com.jyproject.presentation.ui.feature.mapDetail
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,7 +25,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.jyproject.domain.models.SeoulBike
 import com.jyproject.presentation.R
 import com.jyproject.presentation.ui.util.modifierExtensions.singleClick.clickableSingle
@@ -80,11 +84,25 @@ fun MapDetailScreen(
 
     if(showBottomSheet){
         ModalBottomSheet(
-            onDismissRequest = { showBottomSheet = false }
+            onDismissRequest = { showBottomSheet = false },
+            containerColor = Color.White
         ) {
-            Column {
-                seoulBikeInfo.regionDetail?.let { Text(text = it) }
-                seoulBikeInfo.region?.let { Text(text = it) }
+            Column(
+                modifier = Modifier.padding(horizontal = 12.dp)
+            ) {
+                Text(
+                    text = "대여소 정보",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = colorResource(id = R.color.app_base)
+                )
+                Spacer(modifier = Modifier.size(12.dp))
+                seoulBikeInfo.rentalName?.let { Text(text = it) }
+                Spacer(modifier = Modifier.size(4.dp))
+                seoulBikeInfo.regionDetail?.let { Text(text = "주소: $it") }
+                Spacer(modifier = Modifier.size(4.dp))
+                seoulBikeInfo.way?.let { Text(text = "대여 방법: $it") }
+                Spacer(modifier = Modifier.size(62.dp))
             }
         }
     }

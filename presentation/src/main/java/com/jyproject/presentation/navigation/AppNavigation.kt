@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,6 +25,11 @@ import com.jyproject.presentation.anim.horizontallyAnimatedComposableArguments
 import com.jyproject.presentation.anim.noAnimatedComposable
 import com.jyproject.presentation.anim.verticallyAnimatedComposable
 import com.jyproject.presentation.anim.verticallyAnimatedComposableArguments
+import com.jyproject.presentation.navigation.auth.LoginScreenDestination
+import com.jyproject.presentation.navigation.auth.RegisterScreenDestination
+import com.jyproject.presentation.navigation.place.PlaceAddScreenDestination
+import com.jyproject.presentation.navigation.place.PlaceDetailScreenDestination
+import com.jyproject.presentation.navigation.place.PlaceSearchScreenDestination
 import com.jyproject.presentation.ui.feature.common.util.BottomBar
 import com.jyproject.presentation.ui.feature.common.util.TopBar
 import com.jyproject.presentation.ui.feature.mypage.MyPageScreen
@@ -37,17 +42,14 @@ fun AppNavigation(
     val items = listOf(
         Screen.Home, Screen.MyPage
     )
-    // 상/하단바 숨김 화면 리스트
+    // 상/하단바 보일 화면 리스트
     val routesWithoutBar = listOf(
-        Navigation.Routes.PLACE_SEARCH, Navigation.Routes.LOGIN,
-        "${Navigation.Routes.PLACE_ADD}/{${Navigation.Args.PLACE_ADD_NAME}}",
-        "${Navigation.Routes.PLACE_DETAIL}/{${Navigation.Args.PLACE_DETAIL_NAME}}",
-        "${Navigation.Routes.MAP_DETAIL}/{${Navigation.Args.MAP_DETAIL_NAME}}"
+        Navigation.Routes.HOME, Navigation.Routes.MYPAGE
     )
     var isBar by remember { mutableStateOf(true) }
 
     navController.addOnDestinationChangedListener { _, destination, _ ->
-        isBar = destination.route !in routesWithoutBar
+        isBar = destination.route in routesWithoutBar
     }
 
     Scaffold(
@@ -115,6 +117,20 @@ fun AppNavigation(
 
                 MapDetailScreenDestination(placeArea = placeArea, navController = navController)
             }
+
+            verticallyAnimatedComposableArguments(
+                route = "${Navigation.Routes.REGISTER}/{${Navigation.Args.REGISTER_NAME}}",
+                arguments = listOf(navArgument(Navigation.Args.REGISTER_NAME){
+                    type = NavType.StringType
+                })
+            ) { navBackStackEntry ->
+                val userNum =
+                    requireNotNull(navBackStackEntry.arguments?.getString(Navigation.Args.REGISTER_NAME)) {
+                        "Require userNum"
+                    }
+
+                RegisterScreenDestination(userNum = userNum, navController = navController)
+            }
         }
     }
 
@@ -132,7 +148,12 @@ fun NavController.navigateToMapDetail(placeArea: String) {
     navigate(route = "${Navigation.Routes.MAP_DETAIL}/$placeArea")
 }
 
+fun NavController.navigateToRegister(userNum: String) {
+    popBackStack()
+    navigate(route = "${Navigation.Routes.REGISTER}/$userNum")
+}
+
 sealed class Screen(val route: String, @StringRes val resourceId: Int, val icon: ImageVector){
     data object Home: Screen("home", R.string.route_home, icon = Icons.Filled.Home)
-    data object MyPage: Screen("mypage", R.string.route_mypage, icon = Icons.Filled.FavoriteBorder)
+    data object MyPage: Screen("mypage", R.string.route_mypage, icon = Icons.Filled.Person)
 }

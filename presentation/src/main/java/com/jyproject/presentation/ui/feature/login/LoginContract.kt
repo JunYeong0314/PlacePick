@@ -11,16 +11,18 @@ class LoginContract {
         data object NavigationToMain: Event()
         data object KakaoLogin: Event()
         data class NaverLogin(val context: Context): Event()
-        data object SignUp: Event()
+        data class NavigationToRegister(val userNum: String): Event()
     }
 
     data class State(
+        val userNum: String?,
         val loginState: LoginState
     ): ViewState
 
     sealed class Effect: ViewSideEffect {
         sealed class Navigation: Effect() {
             data object ToMainScreen: Navigation()
+            data class ToRegisterScreen(val userNum: String): Navigation()
         }
     }
 }

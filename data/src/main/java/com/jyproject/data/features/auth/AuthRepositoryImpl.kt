@@ -33,4 +33,8 @@ class AuthRepositoryImpl @Inject constructor(
             signUpService.signUp(num).body()?.token
         }
     }
+
+    override suspend fun checkNick(nick: String): Result<Boolean?> {
+        TODO("Not yet implemented")
+    }
 }

@@ -1,7 +1,6 @@
 package com.jyproject.presentation.ui.feature.login
 
 import com.jyproject.domain.features.auth.usecase.CheckMemberUseCase
-import com.jyproject.domain.features.auth.usecase.SignUpUseCase
 import com.jyproject.domain.features.db.repository.UserDataRepository
 import com.jyproject.domain.features.login.usecase.KakaoLoginUseCase
 import com.jyproject.domain.features.login.usecase.NaverLoginUseCase
@@ -26,7 +25,6 @@ class LoginViewModelTest {
 
     private lateinit var naverLoginUseCase: NaverLoginUseCase
     private lateinit var kakaoLoginUseCase: KakaoLoginUseCase
-    private lateinit var signUpUseCase: SignUpUseCase
     private lateinit var checkMemberUseCase: CheckMemberUseCase
     private lateinit var userDataRepository: UserDataRepository
     private lateinit var viewModel: LoginViewModel
@@ -38,12 +36,11 @@ class LoginViewModelTest {
 
         naverLoginUseCase = mockk()
         kakaoLoginUseCase = mockk()
-        signUpUseCase = mockk()
         checkMemberUseCase = mockk()
         userDataRepository = mockk()
         viewModel = LoginViewModel(
             naverLoginUseCase, kakaoLoginUseCase,
-            signUpUseCase, checkMemberUseCase, userDataRepository
+            checkMemberUseCase, userDataRepository
         )
     }
 
@@ -78,78 +75,43 @@ class LoginViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `회원가입 할 때 토큰을 저장하고 LoginState가 EXIST로 변경`() = runTest {
-        // Given
+    fun `startLogin을 할 때 기존유저면 LoginState는 EXIST`() = runTest {
         val userNum = "123"
-        val expectToken = "fakeToken"
-        viewModel.userNumber = userNum
+        coEvery { checkMemberUseCase(userNum) } returns Result.success(true)
 
-        coEvery { signUpUseCase(userNum) } returns Result.success(expectToken)
-        coEvery { userDataRepository.setUserData("token", expectToken) } just Runs
+        viewModel.startLogin(userNum)
 
-        // When
-        viewModel.signUp()
-
-        // setUserData와 상태 변경이 완료될때까지 대기
         advanceUntilIdle()
 
-        // Then
-        coVerify { signUpUseCase(userNum) }
-        coVerify { userDataRepository.setUserData("token", expectToken) }
+        coEvery { checkMemberUseCase(userNum) }
         assert(viewModel.viewState.value.loginState == LoginState.EXIST)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `회원가입 실패 시 LoginState를 ERROR로 변경`() = runTest {
-        // Given
+    fun `startLogin을 할 때 첫 유저면 LoginState는 Register`() = runTest {
         val userNum = "123"
-        viewModel.userNumber = userNum
-        coEvery { signUpUseCase(userNum) } returns Result.failure(Exception("Sign up failed"))
+        coEvery { checkMemberUseCase(userNum) } returns Result.success(false)
 
-        // When
-        viewModel.signUp()
+        viewModel.startLogin(userNum)
 
         advanceUntilIdle()
 
-        // Then
-        coVerify { signUpUseCase(userNum) }
+        coEvery { checkMemberUseCase(userNum) }
+        assert(viewModel.viewState.value.loginState == LoginState.REGISTER)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `startLogin을 할 때 Boolean타입이 아니면 LoginState는 ERROR`() = runTest {
+        val userNum = "123"
+        coEvery { checkMemberUseCase(userNum) } returns Result.success(null)
+
+        viewModel.startLogin(userNum)
+
+        advanceUntilIdle()
+
+        coEvery { checkMemberUseCase(userNum) }
         assert(viewModel.viewState.value.loginState == LoginState.ERROR)
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun `isMember에서 기존유저면 LoginState를 EXIST로 변경`() = runTest {
-        //Given
-        val userNum = "123"
-        val isMemberResult = true
-        coEvery { checkMemberUseCase(userNum) } returns Result.success(isMemberResult)
-
-        // When
-        viewModel.isMember(userNum)
-
-        advanceUntilIdle()
-
-        //Then
-        coVerify { checkMemberUseCase(userNum) }
-        assert(viewModel.viewState.value.loginState == LoginState.EXIST)
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun `isMember에서 첫유저면 LoginState를 INIT으로 변경`() = runTest {
-        //Given
-        val userNum = "123"
-        val isMemberResult = false
-        coEvery { checkMemberUseCase(userNum) } returns Result.success(isMemberResult)
-
-        // When
-        viewModel.isMember(userNum)
-
-        advanceUntilIdle()
-
-        //Then
-        coVerify { checkMemberUseCase(userNum) }
-        assert(viewModel.viewState.value.loginState == LoginState.INIT)
     }
 }

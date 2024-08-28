@@ -3,7 +3,6 @@ package com.jyproject.presentation.ui.feature.login
 import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.jyproject.domain.features.auth.usecase.CheckMemberUseCase
-import com.jyproject.domain.features.auth.usecase.SignUpUseCase
 import com.jyproject.domain.features.db.repository.UserDataRepository
 import com.jyproject.domain.features.login.usecase.KakaoLoginUseCase
 import com.jyproject.domain.features.login.usecase.NaverLoginUseCase
@@ -16,22 +15,25 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val naverLoginUseCase: NaverLoginUseCase,
     private val kakaoLoginUseCase: KakaoLoginUseCase,
-    private val signUpUseCase: SignUpUseCase,
     private val checkMemberUseCase: CheckMemberUseCase,
     private val userDataRepository: UserDataRepository
 ): BaseViewModel<LoginContract.Event, LoginContract.State, LoginContract.Effect>() {
-    var userNumber = "" // 회원가입 하는 경우 사용
     override fun setInitialState() = LoginContract.State(
-        loginState = LoginState.BLANK
+        userNum = null,
+        loginState = LoginState.INIT
     )
 
     override fun handleEvents(event: LoginContract.Event) {
         when(event) {
-            is LoginContract.Event.NavigationToMain -> setEffect { LoginContract.Effect.Navigation.ToMainScreen }
             is LoginContract.Event.Retry -> {}
             is LoginContract.Event.KakaoLogin -> { startKakaoLogin() }
             is LoginContract.Event.NaverLogin -> { startNaverLogin(event.context) }
-            is LoginContract.Event.SignUp -> { signUp() }
+            is LoginContract.Event.NavigationToRegister -> {
+                setEffect { LoginContract.Effect.Navigation.ToRegisterScreen(event.userNum) }
+            }
+            is LoginContract.Event.NavigationToMain -> {
+                setEffect { LoginContract.Effect.Navigation.ToMainScreen }
+            }
         }
     }
 
@@ -39,9 +41,8 @@ class LoginViewModel @Inject constructor(
         setState { copy(loginState = LoginState.LOADING) }
         kakaoLoginUseCase(updateSocialToken = {}) { userNum ->
             userNum?.let {
-                isMember(userNum)
                 viewModelScope.launch { userDataRepository.setUserData("num", userNum) }
-                userNumber = userNum
+                startLogin(userNum = userNum)
             }
         }
     }
@@ -50,42 +51,41 @@ class LoginViewModel @Inject constructor(
         setState { copy(loginState = LoginState.LOADING) }
         naverLoginUseCase(context = context, updateSocialToken = {}) { userNum->
             userNum?.let {
-                isMember(userNum)
                 viewModelScope.launch { userDataRepository.setUserData("num", userNum) }
-                userNumber = userNum
+                startLogin(userNum = userNum)
             }
-        }
-    }
-
-    fun signUp() {
-        viewModelScope.launch {
-            // TODO 회원가입 닉네임 수정 필요
-            signUpUseCase(userNumber, "")
-                .onFailure { setState { copy(loginState = LoginState.ERROR) } }
-                .onSuccess { token->
-                    token?.let { userDataRepository.setUserData("token", token) }
-                    setState { copy(loginState = LoginState.EXIST) }
-                }
         }
     }
 
     fun initSetting(){
         viewModelScope.launch {
-            if(userDataRepository.getUserData().userNum.isNotBlank()){
+            val userNum = userDataRepository.getUserData().userNum
+
+            if(userNum.isNotBlank()){
                 setState { copy(loginState = LoginState.LOADING) }
-                isMember(userDataRepository.getUserData().userNum)
+                checkMemberUseCase(userNum)
+                    .onFailure { setState { copy(loginState = LoginState.ERROR) } }
+                    .onSuccess { isExist ->
+                        when(isExist) {
+                            true -> setState { copy(loginState = LoginState.EXIST_USER) }
+                            false -> setState { copy(loginState = LoginState.FIRST_USER) }
+                            else -> setState { copy(loginState = LoginState.ERROR) }
+                        }
+                    }
             }
         }
     }
 
-    fun isMember(userNum: String){
+    // 로그인을 시작 할 때 사용
+    fun startLogin(userNum: String) {
+        setState { copy(loginState = LoginState.LOADING) }
         viewModelScope.launch {
             checkMemberUseCase(userNum)
                 .onFailure { setState { copy(loginState = LoginState.ERROR) } }
                 .onSuccess { isExist ->
                     when(isExist) {
-                        true -> setState { copy(loginState = LoginState.EXIST) }
-                        false -> setState { copy(loginState = LoginState.INIT) }
+                        true -> setState { copy(loginState = LoginState.EXIST_USER) }
+                        false -> setState { copy(userNum = userNum, loginState = LoginState.REGISTER) }
                         else -> setState { copy(loginState = LoginState.ERROR) }
                     }
                 }

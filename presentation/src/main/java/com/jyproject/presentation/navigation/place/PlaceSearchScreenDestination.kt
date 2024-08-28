@@ -1,9 +1,9 @@
-package com.jyproject.presentation.navigation
+package com.jyproject.presentation.navigation.place
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.jyproject.presentation.navigation.navigateToPlaceAdd
 import com.jyproject.presentation.ui.feature.placeSearch.PlaceSearchContract
 import com.jyproject.presentation.ui.feature.placeSearch.PlaceSearchScreen
 import com.jyproject.presentation.ui.feature.placeSearch.PlaceSearchViewModel

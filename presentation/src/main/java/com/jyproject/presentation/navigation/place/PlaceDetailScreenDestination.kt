@@ -1,4 +1,4 @@
-package com.jyproject.presentation.navigation
+package com.jyproject.presentation.navigation.place
 
 import android.Manifest
 import androidx.annotation.RequiresPermission
@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.jyproject.presentation.navigation.Navigation
+import com.jyproject.presentation.navigation.navigateToMapDetail
 import com.jyproject.presentation.ui.feature.common.error.ErrorScreen
 import com.jyproject.presentation.ui.feature.common.error.NetworkErrorScreen
 import com.jyproject.presentation.ui.feature.common.util.CircularProgress

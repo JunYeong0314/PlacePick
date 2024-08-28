@@ -1,9 +1,10 @@
-package com.jyproject.presentation.navigation
+package com.jyproject.presentation.navigation.place
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.jyproject.presentation.navigation.Navigation
 import com.jyproject.presentation.ui.feature.placeAdd.PlaceAddContract
 import com.jyproject.presentation.ui.feature.placeAdd.PlaceAddScreen
 import com.jyproject.presentation.ui.feature.placeAdd.PlaceAddState
