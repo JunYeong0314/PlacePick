@@ -47,10 +47,9 @@ fun RegisterScreen(
                 nickText = nickText,
                 nickLength = nickLength,
                 onValueChange = {
-                    if(nickText.length < 10) nickText = it
+                    if (it.length <= 10) nickText = it
                 }
             )
-
         }
     }
 

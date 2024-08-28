@@ -45,6 +45,7 @@ class LoginViewModel @Inject constructor(
                 startLogin(userNum = userNum)
             }
         }
+        setState { copy(loginState = LoginState.INIT) }
     }
 
     private fun startNaverLogin(context: Context) {
@@ -55,6 +56,7 @@ class LoginViewModel @Inject constructor(
                 startLogin(userNum = userNum)
             }
         }
+        setState { copy(loginState = LoginState.INIT) }
     }
 
     fun initSetting(){
