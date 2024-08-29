@@ -1,5 +1,6 @@
 package com.jyproject.data.features.auth
 
+import com.jyproject.data.remote.service.auth.CheckNickService
 import com.jyproject.data.remote.service.auth.CheckService
 import com.jyproject.data.remote.service.auth.SignUpService
 import com.jyproject.data.request.auth.SignUpRequest
@@ -10,6 +11,7 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val signUpService: SignUpService,
     private val checkService: CheckService,
+    private val checkNickService: CheckNickService,
     private val userDataRepository: UserDataRepository
 ): AuthRepository {
     override suspend fun checkMember(userNum: String): Result<Boolean?> {
@@ -34,7 +36,9 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun checkNick(nick: String): Result<Boolean?> {
-        TODO("Not yet implemented")
+    override suspend fun checkNick(nick: String): Result<Int?> {
+        return runCatching {
+            checkNickService.getCheckNick(nick).code()
+        }
     }
 }

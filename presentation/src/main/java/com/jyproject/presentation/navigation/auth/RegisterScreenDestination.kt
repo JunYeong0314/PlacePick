@@ -13,7 +13,13 @@ fun RegisterScreenDestination(
     viewModel: RegisterViewModel = hiltViewModel()
 ) {
     RegisterScreen(
-        userNum = userNum
+        userNum = userNum,
+        state = viewModel.viewState.value,
+        effectFlow = viewModel.effect,
+        onEventSend = viewModel::setEvent,
+        onEffectSend = {
+
+        }
     )
 
 }

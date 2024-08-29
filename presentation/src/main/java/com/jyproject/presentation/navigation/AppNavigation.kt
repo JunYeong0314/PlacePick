@@ -1,6 +1,8 @@
 package com.jyproject.presentation.navigation
 
+import android.Manifest
 import android.content.Context
+import androidx.annotation.RequiresPermission
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -34,6 +36,9 @@ import com.jyproject.presentation.ui.feature.common.util.BottomBar
 import com.jyproject.presentation.ui.feature.common.util.TopBar
 import com.jyproject.presentation.ui.feature.mypage.MyPageScreen
 
+@RequiresPermission(
+    anyOf = [Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION]
+)
 @Composable
 fun AppNavigation(
     context: Context
@@ -119,13 +124,13 @@ fun AppNavigation(
             }
 
             verticallyAnimatedComposableArguments(
-                route = "${Navigation.Routes.REGISTER}/{${Navigation.Args.REGISTER_NAME}}",
-                arguments = listOf(navArgument(Navigation.Args.REGISTER_NAME){
-                    type = NavType.StringType
-                })
+                route = "${Navigation.Routes.REGISTER}/{${Navigation.Args.REGISTER_USER_NUM}}",
+                arguments = listOf(
+                    navArgument(Navigation.Args.REGISTER_USER_NUM){ type = NavType.StringType }
+                )
             ) { navBackStackEntry ->
                 val userNum =
-                    requireNotNull(navBackStackEntry.arguments?.getString(Navigation.Args.REGISTER_NAME)) {
+                    requireNotNull(navBackStackEntry.arguments?.getString(Navigation.Args.REGISTER_USER_NUM)) {
                         "Require userNum"
                     }
 

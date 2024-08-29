@@ -1,6 +1,7 @@
 package com.jyproject.data.di
 
 import com.jyproject.data.AppInterceptor
+import com.jyproject.data.remote.service.auth.CheckNickService
 import com.jyproject.data.remote.service.auth.CheckService
 import com.jyproject.data.remote.service.auth.SignUpService
 import com.jyproject.data.remote.service.place.GetPlaceInfoService
@@ -105,6 +106,12 @@ class ApiModule {
     @Provides
     fun provideCheckService(@BaseRetrofit retrofit: Retrofit): CheckService {
         return retrofit.create(CheckService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCheckNickService(@BaseRetrofit retrofit: Retrofit): CheckNickService {
+        return retrofit.create(CheckNickService::class.java)
     }
 
     @Singleton

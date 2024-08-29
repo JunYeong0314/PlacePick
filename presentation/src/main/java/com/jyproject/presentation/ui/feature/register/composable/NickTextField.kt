@@ -26,6 +26,7 @@ import com.jyproject.presentation.R
 fun NickTextField(
     nickText: String,
     nickLength: Int,
+    checkNickMsg: String,
     onValueChange: (String) -> Unit
 ) {
     Column {

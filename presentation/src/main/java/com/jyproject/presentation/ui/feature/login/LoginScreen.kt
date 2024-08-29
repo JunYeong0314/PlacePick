@@ -60,6 +60,7 @@ fun LoginScreen(
             LoginState.EXIST_USER -> { onEventSend(LoginContract.Event.NavigationToMain) }
             LoginState.REGISTER -> {
                 val userNum = state.userNum
+
                 if(!userNum.isNullOrBlank()) {
                     onEventSend(LoginContract.Event.NavigationToRegister(userNum))
                 }

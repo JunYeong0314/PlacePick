@@ -13,7 +13,8 @@ class RegisterContract {
 
     data class State(
         val nick: String?,
-        val registerState: RegisterState
+        val registerState: RegisterState,
+        val checkNickResponseCode: Int?
     ): ViewState
 
     sealed class Effect: ViewSideEffect {
