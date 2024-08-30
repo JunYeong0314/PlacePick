@@ -72,6 +72,13 @@ fun LoginScreen(
                     duration = SnackbarDuration.Short
                 )
             }
+            LoginState.NETWORK_ERROR -> {
+                isLoading = false
+                snackBarHostState.showSnackbar(
+                    message = "네트워크가 불안정합니다.",
+                    duration = SnackbarDuration.Short
+                )
+            }
         }
     }
 

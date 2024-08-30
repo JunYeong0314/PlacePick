@@ -2,14 +2,14 @@ package com.jyproject.data.features.auth
 
 import com.jyproject.data.remote.service.auth.CheckNickService
 import com.jyproject.data.remote.service.auth.CheckService
-import com.jyproject.data.remote.service.auth.SignUpService
-import com.jyproject.data.request.auth.SignUpRequest
+import com.jyproject.data.remote.service.auth.RegisterService
+import com.jyproject.data.request.auth.RegisterRequest
 import com.jyproject.domain.features.auth.repository.AuthRepository
 import com.jyproject.domain.features.db.repository.UserDataRepository
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val signUpService: SignUpService,
+    private val signUpService: RegisterService,
     private val checkService: CheckService,
     private val checkNickService: CheckNickService,
     private val userDataRepository: UserDataRepository
@@ -28,11 +28,11 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun signUp(userNum: String, nick: String): Result<String?> {
-        val num = SignUpRequest(userNum = userNum, nick = nick)
+    override suspend fun register(userNum: String, nick: String): Result<String?> {
+        val num = RegisterRequest(userNum = userNum, nick = nick)
 
         return runCatching {
-            signUpService.signUp(num).body()?.token
+            signUpService.register(num).body()?.token
         }
     }
 

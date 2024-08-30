@@ -66,7 +66,15 @@ class LoginViewModel @Inject constructor(
             if(userNum.isNotBlank()){
                 setState { copy(loginState = LoginState.LOADING) }
                 checkMemberUseCase(userNum)
-                    .onFailure { setState { copy(loginState = LoginState.ERROR) } }
+                    .onFailure { exception->
+                        val errorState = when(exception) {
+                            is java.net.UnknownHostException -> LoginState.NETWORK_ERROR
+                            is java.net.SocketTimeoutException -> LoginState.NETWORK_ERROR
+                            else -> LoginState.ERROR
+                        }
+
+                        setState { copy(loginState = errorState) }
+                    }
                     .onSuccess { isExist ->
                         when(isExist) {
                             true -> setState { copy(loginState = LoginState.EXIST_USER) }

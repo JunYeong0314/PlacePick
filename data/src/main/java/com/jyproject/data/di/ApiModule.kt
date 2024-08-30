@@ -3,7 +3,7 @@ package com.jyproject.data.di
 import com.jyproject.data.AppInterceptor
 import com.jyproject.data.remote.service.auth.CheckNickService
 import com.jyproject.data.remote.service.auth.CheckService
-import com.jyproject.data.remote.service.auth.SignUpService
+import com.jyproject.data.remote.service.auth.RegisterService
 import com.jyproject.data.remote.service.place.GetPlaceInfoService
 import com.jyproject.data.remote.service.place.SearchPlaceService
 import com.jyproject.data.remote.service.seoulbike.GetSeoulBikeInfoService
@@ -98,8 +98,8 @@ class ApiModule {
 
     @Singleton
     @Provides
-    fun provideSignUpService(@BaseRetrofit retrofit: Retrofit): SignUpService {
-        return retrofit.create(SignUpService::class.java)
+    fun provideSignUpService(@BaseRetrofit retrofit: Retrofit): RegisterService {
+        return retrofit.create(RegisterService::class.java)
     }
 
     @Singleton

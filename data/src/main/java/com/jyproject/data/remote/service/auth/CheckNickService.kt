@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface CheckNickService {
-    @GET("/api/v1/auth/check-nickname/{userNum}")
+    @GET("/api/v1/auth/check-nickname/{nick}")
     suspend fun getCheckNick(
         @Path("nick") nick: String
     ): Response<CheckNickResponse>

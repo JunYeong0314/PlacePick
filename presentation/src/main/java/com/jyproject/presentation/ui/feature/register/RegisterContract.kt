@@ -9,6 +9,7 @@ class RegisterContract {
         data class OnNickCheck(val nick: String): Event()
         data object NavigateToMain: Event()
         data object NavigateToBack: Event()
+        data class OnRegisterRequest(val userNum: String, val nick: String): Event()
     }
 
     data class State(

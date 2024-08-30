@@ -11,6 +11,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -47,11 +50,38 @@ fun RegisterScreen(
     }
     var isComplete by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
-    var checkNickMsg by remember { mutableStateOf("닉네임을 입력하세요") }
-    var checkNickMsgColor by remember { mutableStateOf(Color.Red) }
+    var checkNickMsg by remember { mutableStateOf("") }
+    var checkNickMsgColor by remember { mutableIntStateOf(R.color.middle_red) }
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(effectFlow) {
+        effectFlow?.collect {effect ->
+            when(effect) {
+                is RegisterContract.Effect.Navigate.ToBack ->
+                    onEffectSend(RegisterContract.Effect.Navigate.ToBack)
+                is RegisterContract.Effect.Navigate.ToMain ->
+                    onEffectSend(RegisterContract.Effect.Navigate.ToMain)
+            }
+        }
+    }
 
     LaunchedEffect(nickText) {
         nickLength = nickText.length
+        onEventSend(RegisterContract.Event.OnNickCheck(nickText))
+    }
+
+    LaunchedEffect(state.checkNickResponseCode) {
+        when(state.checkNickResponseCode){
+            null -> {}
+            200 -> {
+                checkNickMsg = "사용가능한 닉네임이에요"
+                checkNickMsgColor = R.color.middle_green
+            }
+            409 -> {
+                checkNickMsg = "이미 등록되어있는 닉네임이에요"
+                checkNickMsgColor = R.color.middle_red
+            }
+        }
     }
 
     LaunchedEffect(state.registerState) {
@@ -61,13 +91,27 @@ fun RegisterScreen(
                 isComplete = false
             }
             RegisterState.LOADING -> isLoading = true
-            RegisterState.SUCCESS -> {}
+            RegisterState.SUCCESS -> {
+                onEventSend(RegisterContract.Event.NavigateToMain)
+            }
             RegisterState.NICK_SUCCESS -> {
                 completeButtonColor = R.color.app_base
                 isComplete = true
             }
-            RegisterState.NETWORK_ERROR -> {}
-            RegisterState.ERROR -> {}
+            RegisterState.NICK_BLANK -> {
+                checkNickMsg = "닉네임을 입력하세요"
+                checkNickMsgColor = R.color.middle_red
+                isComplete = false
+            }
+            RegisterState.NETWORK_ERROR -> {
+                isComplete = false
+            }
+            RegisterState.ERROR -> {
+                snackBarHostState.showSnackbar(
+                    message = "회원가입 요청이 실패했습니다.",
+                    duration = SnackbarDuration.Short
+                )
+            }
         }
     }
     
@@ -75,7 +119,12 @@ fun RegisterScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White),
-        topBar = { RegisterTopBar() }
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState) },
+        topBar = {
+            RegisterTopBar(
+                onClickBackButton = { onEventSend(RegisterContract.Event.NavigateToBack) }
+            )
+        }
     ) { innerPadding->
         if (isLoading) CircularProgress()
         Column(
@@ -89,11 +138,9 @@ fun RegisterScreen(
                 nickText = nickText,
                 nickLength = nickLength,
                 checkNickMsg = checkNickMsg,
+                checkNickMsgColor = checkNickMsgColor,
                 onValueChange = {
-                    if (it.length <= 10) {
-                        nickText = it
-                        onEventSend(RegisterContract.Event.OnNickCheck(nickText))
-                    }
+                    if (it.length <= 10) nickText = it
                 }
             )
             Spacer(modifier = Modifier.size(24.dp))
@@ -101,7 +148,7 @@ fun RegisterScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp, vertical = 8.dp),
-                onClick = { onEventSend(RegisterContract.Event.NavigateToMain) },
+                onClick = { onEventSend(RegisterContract.Event.OnRegisterRequest(userNum, nickText)) },
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(id = completeButtonColor)

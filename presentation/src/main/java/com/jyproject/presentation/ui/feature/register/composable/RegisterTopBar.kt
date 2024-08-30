@@ -20,7 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun RegisterTopBar(){
+fun RegisterTopBar(
+    onClickBackButton: () -> Unit
+){
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -35,7 +37,7 @@ fun RegisterTopBar(){
         )
     }
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart){
-        IconButton(onClick = {}) {
+        IconButton(onClick = onClickBackButton) {
             Icon(
                 modifier = Modifier.size(36.dp),
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
