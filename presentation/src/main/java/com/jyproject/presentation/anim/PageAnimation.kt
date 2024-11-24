@@ -11,6 +11,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 
+
 private const val animDurationMillis = 400
 fun NavGraphBuilder.horizontallyAnimatedComposable(
     route: String,
@@ -96,7 +97,6 @@ fun NavGraphBuilder.noAnimatedComposable(
     )
 
 }
-
 fun NavGraphBuilder.horizontallyAnimatedComposableArguments(
     route: String,
     arguments: List<NamedNavArgument>? = null,

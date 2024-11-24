@@ -7,6 +7,7 @@ import com.jyproject.presentation.navigation.AppNavigation
 import com.jyproject.presentation.ui.theme.CustomTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
