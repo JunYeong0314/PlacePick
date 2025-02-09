@@ -16,7 +16,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.jyproject.presentation.R
 import com.jyproject.presentation.navigation.Screen
@@ -30,7 +29,7 @@ fun BottomBar(
     NavigationBar(
         modifier = Modifier
             .height(60.dp)
-            .shadow(elevation = 10.dp, shape = RoundedCornerShape(15.dp)),
+            .shadow(elevation = 10.dp, shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp)),
         containerColor = colorResource(id = R.color.white)
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -49,9 +48,13 @@ fun BottomBar(
                     )
                 },
                 onClick = {
-                    navController.navigate(screen.route){
-                        popUpTo(navController.graph.findStartDestination().id){
-                            saveState = true
+                    if(currentDestination?.route != screen.route) {
+                        navController.navigate(screen.route){
+                            popUpTo(0) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
                     }
                 },

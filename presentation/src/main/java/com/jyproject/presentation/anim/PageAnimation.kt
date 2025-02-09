@@ -97,6 +97,31 @@ fun NavGraphBuilder.noAnimatedComposable(
     )
 
 }
+
+fun NavGraphBuilder.noAnimatedComposableArguments(
+    route: String,
+    arguments: List<NamedNavArgument>? = null,
+    content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit,
+){
+    composable(
+        route = route,
+        content = content,
+        arguments = arguments ?: emptyList(),
+        enterTransition = {
+            fadeIn(animationSpec = tween(durationMillis = 0))
+        },
+        exitTransition = {
+            fadeOut(animationSpec = tween(durationMillis = 0))
+        },
+        popExitTransition = {
+            fadeOut(animationSpec = tween(durationMillis = 0))
+        },
+        popEnterTransition = {
+            fadeIn(animationSpec = tween(durationMillis = 0))
+        },
+    )
+
+}
 fun NavGraphBuilder.horizontallyAnimatedComposableArguments(
     route: String,
     arguments: List<NamedNavArgument>? = null,

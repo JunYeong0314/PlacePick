@@ -17,5 +17,6 @@ object Navigation {
         const val PLACE_ADD = "placeAdd"
         const val PLACE_DETAIL = "placeDetail"
         const val MAP_DETAIL = "mapDetail"
+        const val CALENDAR = "calendar"
     }
 }

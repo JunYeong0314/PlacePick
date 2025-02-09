@@ -4,6 +4,7 @@
     <string name="route_login">Login</string>
     <string name="route_home">HomeScreen</string>
     <string name="route_mypage">MyPageScreen</string>
+    <string name="route_calendar">CalendarScreen</string>
     <string name="example">Example</string>
 
     <!-- App Message -->

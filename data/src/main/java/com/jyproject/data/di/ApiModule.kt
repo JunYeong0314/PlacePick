@@ -25,7 +25,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class ApiModule {
     companion object{
-        const val BASE_URL = "http://192.168.0.10:4000"
+        const val BASE_URL = "http://192.168.0.9:4000"
         const val CONNECT_TIMEOUT_SECONDS = 10L
         const val READ_TIMEOUT_SECONDS = 10L
         const val WRITE_TIMEOUT_SECONDS = 10L
