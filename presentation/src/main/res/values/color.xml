@@ -11,6 +11,8 @@
     <color name="error_red">#A40019</color>
     <color name="middle_green">#019504</color>
     <color name="middle_red">#FF0000</color>
+
+    <color name="hard_gray_1">#767575</color>
     
     <!--login-->
     <color name="kakao_login">#FFE812</color>
